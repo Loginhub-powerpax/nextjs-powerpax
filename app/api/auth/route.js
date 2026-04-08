@@ -44,10 +44,7 @@ export async function POST(request) {
     if (matchedUser) {
       return NextResponse.json({ 
         success: true, 
-        user: {
-          username: matchedUser.username,
-          company_name: matchedUser.company_name
-        } 
+        user: matchedUser 
       });
     } else {
       return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 });

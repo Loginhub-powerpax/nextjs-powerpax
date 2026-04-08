@@ -38,9 +38,10 @@ export default function LoginPage() {
         throw new Error(data.error || 'Authentication failed');
       }
 
-      // Store company name for dashboard
-      if (typeof window !== 'undefined' && data.user?.company_name) {
-        localStorage.setItem('companyName', data.user.company_name);
+      // Store exhibitor data for dashboard and forms
+      if (typeof window !== 'undefined' && data.user) {
+        localStorage.setItem('companyName', data.user.company_name || 'Exhibitor Company');
+        localStorage.setItem('exhibitorData', JSON.stringify(data.user));
       }
 
       setIsSuccess(true);

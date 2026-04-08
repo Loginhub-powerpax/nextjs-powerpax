@@ -72,11 +72,11 @@ export default function AdminPage() {
     );
   }
 
-  // Create grouped by company
+  // Group submissions by Username (or Company Name as fallback)
   const groupedSubmissions = submissions.reduce((acc, sub) => {
-    const comp = sub.company_name;
-    if (!acc[comp]) acc[comp] = [];
-    acc[comp].push(sub);
+    const key = sub.username && sub.username !== 'Unknown' ? sub.username : sub.company_name;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(sub);
     return acc;
   }, {});
 
@@ -119,17 +119,32 @@ export default function AdminPage() {
                 ) : Object.keys(groupedSubmissions).length === 0 ? (
                   <tr><td colSpan="5" style={{padding: '40px', textAlign: 'center'}}>No submissions found.</td></tr>
                 ) : (
-                  Object.keys(groupedSubmissions).map(company => {
-                    const forms = groupedSubmissions[company];
+                  Object.keys(groupedSubmissions).map(key => {
+                    const forms = groupedSubmissions[key];
                     const recentSub = forms[0];
+                    const filledFormIds = forms.map(f => f.form_id);
+                    const allFormIds = ['F01', 'F02', 'F03', 'F04', 'F05', 'F06'];
+                    
                     return (
-                      <tr key={company} style={{borderBottom: '1px solid #f9f9f9'}}>
+                      <tr key={key} style={{borderBottom: '1px solid #f9f9f9'}}>
                         <td style={{padding: '12px', whiteSpace: 'nowrap'}}>{new Date(recentSub.created_at).toLocaleString()}</td>
-                        <td style={{padding: '12px'}}><strong>{company}</strong></td>
                         <td style={{padding: '12px'}}>
-                          <span className="badge-status-lbl" style={{background: '#e3f2fd', color: '#1976d2', padding: '4px 8px', borderRadius: '4px', fontSize: '11px'}}>
-                            {forms.length} Forms
-                          </span>
+                          <div style={{fontWeight: 'bold', color: '#1a1a1a'}}>{recentSub.auth_company_name || recentSub.company_name}</div>
+                          <div style={{fontSize: '11px', color: '#64748b'}}>User: {key}</div>
+                        </td>
+                        <td style={{padding: '12px'}}>
+                          <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
+                            {allFormIds.map(fid => (
+                              <span key={fid} style={{
+                                width: '28px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: '9px', borderRadius: '3px', fontWeight: 'bold',
+                                background: filledFormIds.includes(fid) ? '#22c55e' : '#e2e8f0',
+                                color: filledFormIds.includes(fid) ? '#fff' : '#94a3b8'
+                              }}>
+                                {fid}
+                              </span>
+                            ))}
+                          </div>
                         </td>
                         <td style={{padding: '12px', fontSize: '12px'}}>
                           <div>{recentSub.email || '-'}</div>
@@ -140,7 +155,7 @@ export default function AdminPage() {
                             onClick={() => setSelectedCompanyForms(forms)}
                             className="btn-save" 
                             style={{padding: '5px 12px', fontSize: '11px', background: '#333'}}>
-                            View All Forms
+                            View Details
                           </button>
                         </td>
                       </tr>

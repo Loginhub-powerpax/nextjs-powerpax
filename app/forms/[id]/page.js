@@ -8,8 +8,8 @@ const formTitles = {
   'F02': 'Directory Map Board Lettering',
   'F03': 'Exhibitor Name Badges',
   'F04': 'Fascia Name - Shell Scheme Package',
-  'F06': 'Additional Furniture Requirements',
-  'F07': 'Electricity Charges for Designer Stalls'
+  'F05': 'Additional Furniture Requirements',
+  'F06': 'Electricity Charges for Designer Stalls'
 };
 
 export default function FormDetailPage({ params }) {
@@ -19,6 +19,8 @@ export default function FormDetailPage({ params }) {
 
   const [isComplete, setIsComplete] = useState(false);
   const [authCompanyName, setAuthCompanyName] = useState("");
+  const [authUsername, setAuthUsername] = useState("");
+  const [exhibitorData, setExhibitorData] = useState(null);
   
   // Shared fields
   const [companyName, setCompanyName] = useState("");
@@ -32,6 +34,7 @@ export default function FormDetailPage({ params }) {
   const [mobile, setMobile] = useState("");
   const [description, setDescription] = useState("");
   const [productCategory, setProductCategory] = useState("");
+  const [gstNumber, setGstNumber] = useState("-");
 
   const [logoPreview, setLogoPreview] = useState(null);
 
@@ -48,6 +51,9 @@ export default function FormDetailPage({ params }) {
   const [fasciaName, setFasciaName] = useState("");
   const [standNumber, setStandNumber] = useState("");
   const [hallNumber, setHallNumber] = useState("");
+  const [standType, setStandType] = useState("");
+  const [standSize, setStandSize] = useState("");
+  const [openSide, setOpenSide] = useState("");
   const [customFascia, setCustomFascia] = useState(false);
   const [dateField, setDateField] = useState("");
 
@@ -74,7 +80,18 @@ export default function FormDetailPage({ params }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedName = localStorage.getItem('companyName');
-      if (storedName) {
+      const storedExhibitor = localStorage.getItem('exhibitorData');
+      
+      if (storedExhibitor) {
+        const data = JSON.parse(storedExhibitor);
+        setExhibitorData(data);
+        if (data.company_name) {
+          setAuthCompanyName(data.company_name);
+          setNewBadge(prev => ({ ...prev, companyName: data.company_name }));
+        }
+        if (data.username) setAuthUsername(data.username);
+        // Master data is NOT pre-filled into forms anymore to respect the "only what I filled" request
+      } else if (storedName) {
         setAuthCompanyName(storedName);
         setNewBadge(prev => ({ ...prev, companyName: storedName }));
       }
@@ -103,6 +120,9 @@ export default function FormDetailPage({ params }) {
           if (data.fasciaName) setFasciaName(data.fasciaName);
           if (data.standNumber) setStandNumber(data.standNumber);
           if (data.hallNumber) setHallNumber(data.hallNumber);
+          if (data.standType) setStandType(data.standType);
+          if (data.standSize) setStandSize(data.standSize);
+          if (data.openSide) setOpenSide(data.openSide);
           if (data.customFascia) setCustomFascia(data.customFascia);
           if (data.dateField) setDateField(data.dateField);
 
@@ -110,13 +130,7 @@ export default function FormDetailPage({ params }) {
           if (data.electricityItem) setElectricityItem(data.electricityItem);
           if (data.wifiItem) setWifiItem(data.wifiItem);
 
-        } else if (storedName) {
-           setCompanyName(storedName);
-           setFasciaName(storedName);
         }
-      } else if (storedName) {
-         setCompanyName(storedName);
-         setFasciaName(storedName);
       }
     }
   }, [formId]);
@@ -129,7 +143,8 @@ export default function FormDetailPage({ params }) {
       const stored = localStorage.getItem('submittedForms');
       const parsed = stored ? JSON.parse(stored) : {};
       payload = {
-        formId, companyName: companyName || authCompanyName,
+        formId, username: authUsername, authCompanyName,
+        companyName: companyName || authCompanyName,
         contactPerson, address, country, tel, fax, email, website, mobile, description, productCategory, logoPreview,
         badges, fasciaName, standNumber, hallNumber, customFascia, dateField,
         furnitureOrders, electricityItem, wifiItem,
@@ -146,7 +161,10 @@ export default function FormDetailPage({ params }) {
 
   const handleSaveBadge = (e) => {
     e.preventDefault();
-    if (badges.length >= 6) { alert("Only 6 badges allowed per login. Please make a request for more badges."); return; }
+    if (badges.length >= 6) { 
+      alert("Only 6 badges allowed per login. Please make a request for more badges through mail at abhishek.tresubmedia@gmail.com"); 
+      return; 
+    }
     if (!newBadge.terms) { alert("Please accept the terms and conditions"); return; }
     const badgeToPush = { ...newBadge, urn: `URN${Math.floor(Math.random() * 10000)}`, status: 'Pending' };
     const updatedBadges = [...badges, badgeToPush];
@@ -280,7 +298,14 @@ export default function FormDetailPage({ params }) {
       <div className="badge-header-info">
         <div className="badge-info-text"><h4>No. of Badges Alloted : - 5 Exhibitor & 1 Service badges</h4></div>
         <div className="badge-action-btns">
-          <div className="badge-action-row mt-10"><button className="btn-green" onClick={() => setIsAddingBadge(true)} disabled={badges.length >= 6}>+ Add Badge</button></div>
+          <div className="badge-action-row mt-10">
+            <button className="btn-green" onClick={() => setIsAddingBadge(true)} disabled={badges.length >= 6}>+ Add Badge</button>
+          </div>
+          {badges.length >= 6 && (
+            <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '10px' }}>
+              Badge limit reached. For more badges, please email <a href="mailto:abhishek.tresubmedia@gmail.com" style={{ color: '#ef4444', fontWeight: 'bold' }}>abhishek.tresubmedia@gmail.com</a>
+            </p>
+          )}
         </div>
       </div>
       <div className="badge-table-wrapper">
@@ -307,6 +332,7 @@ export default function FormDetailPage({ params }) {
         </div>
         <div className="form-row-grid">
           <div className="form-row"><label>Email Id</label><input type="email" className="gray-input" value={newBadge.email} onChange={e => setNewBadge({...newBadge, email: e.target.value})} required /></div>
+          <div className="form-row"><label>Mobile Number</label><input type="tel" className="gray-input" value={newBadge.mobile} onChange={e => setNewBadge({...newBadge, mobile: e.target.value})} required /></div>
           <div className="form-row"><label>Company Name</label><input type="text" className="gray-input" value={newBadge.companyName} onChange={e => setNewBadge({...newBadge, companyName: e.target.value})} required /></div>
         </div>
         <div className="terms-section mt-20">
@@ -404,6 +430,21 @@ export default function FormDetailPage({ params }) {
           </tbody>
         </table>
       </div>
+
+      <div style={{ marginTop: '30px', padding: '20px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+        <h4 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '15px' }}>Payment Details</h4>
+        <ol style={{ paddingLeft: '20px', fontSize: '13px', color: '#334155', lineHeight: '1.8' }}>
+          <li>Payment in favour of <strong>Tresub Media Private Limited</strong>, payable at Noida, U.P.</li>
+          <li>Terms: 50% in advance + 50% before the event.</li>
+          <li>Subject to terms & conditions in the License to Use Agreement.</li>
+          <li>Subject to Uttar Pradesh jurisdiction.</li>
+          <li><strong>Bank:</strong> ICICI Bank Ltd., Branch – Greater Noida-Gaur City 2, Gautam Buddha Nagar, Noida, U.P. – 201009. <strong>A/C No:</strong> 739105000628. <strong>IFSC:</strong> ICIC0007391.</li>
+        </ol>
+        <p style={{ marginTop: '15px', fontSize: '13px', color: '#0f172a', fontWeight: '500' }}>
+          <i className="fas fa-info-circle" style={{ color: '#0ea5e9', marginRight: '8px' }}></i>
+          After making the payment, please drop a mail with the confirmation to: <a href="mailto:neha@renewablemirror.com" style={{ color: '#0ea5e9', textDecoration: 'underline' }}>neha@renewablemirror.com</a>
+        </p>
+      </div>
       <div className="form-actions-footer mt-40">
         <button type="submit" className="btn-save">{isComplete ? "Update Form" : "Save Changes"}</button>
       </div>
@@ -478,35 +519,44 @@ export default function FormDetailPage({ params }) {
 
       <main className="form-detail-content">
         <div className="container">
-          <div style={{ display: formId === 'F03' && isAddingBadge ? 'none' : 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+          <div className="responsive-header-grid" style={{ 
+            display: (formId === 'F03' && isAddingBadge) || (!companyName && !contactPerson && !standNumber && !hallNumber) ? 'none' : 'flex', 
+            flexWrap: 'wrap', 
+            gap: '20px', 
+            marginBottom: '20px' 
+          }}>
             
             {/* Left Box: Company detail */}
-            <div style={{ flex: '1 1 50%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
-              <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Company detail</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '10px', fontSize: '13px', lineHeight: '1.4' }}>
-                <strong style={{ color: '#000' }}>Company name</strong><span style={{ color: '#475569' }}>{companyName || 'Tresub Media Pvt. Ltd.'}</span>
-                <strong style={{ color: '#000' }}>Contact Person</strong><span style={{ color: '#475569' }}>{contactPerson || 'Ms. Neha Chauhan'}</span>
-                <strong style={{ color: '#000' }}>Email</strong><span style={{ color: '#475569' }}>{email || 'neha@renewablemirror.com'}</span>
-                <strong style={{ color: '#000' }}>Mobile no.</strong><span style={{ color: '#475569' }}>{mobile || '+91 9873168426'}</span>
-                <strong style={{ color: '#000' }}>Address</strong><span style={{ color: '#475569' }}>{address || 'Gaur City Mall, Office No. 14130-14130A, Floor 13, Greater Noida'}</span>
-                <strong style={{ color: '#000' }}>GST Number</strong><span style={{ color: '#475569' }}>-</span>
+            {(companyName || contactPerson || address || mobile) && (
+              <div className="header-box" style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
+                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Company detail</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '10px', fontSize: '13px', lineHeight: '1.4' }}>
+                  <strong style={{ color: '#000' }}>Company name</strong><span style={{ color: '#475569' }}>{companyName || '-'}</span>
+                  <strong style={{ color: '#000' }}>Contact Person</strong><span style={{ color: '#475569' }}>{contactPerson || '-'}</span>
+                  <strong style={{ color: '#000' }}>Email</strong><span style={{ color: '#475569' }}>{email || '-'}</span>
+                  <strong style={{ color: '#000' }}>Mobile no.</strong><span style={{ color: '#475569' }}>{mobile || '-'}</span>
+                  <strong style={{ color: '#000' }}>Address</strong><span style={{ color: '#475569' }}>{address || '-'}</span>
+                  <strong style={{ color: '#000' }}>GST Number</strong><span style={{ color: '#475569' }}>{gstNumber || '-'}</span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Right Box: Exhibitor Stand Detail */}
-            <div style={{ flex: '1 1 40%', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
-              <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Exhibitor Stand Detail</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(80px,auto) 1fr minmax(70px,auto) 1fr', gap: '10px 15px', fontSize: '13px', lineHeight: '1.4' }}>
-                <strong style={{ color: '#000' }}>Stand no.</strong><span style={{ color: '#475569' }}>{standNumber || 'C18'}</span>
-                <strong style={{ color: '#000' }}>Hall no</strong><span style={{ color: '#475569' }}>{hallNumber || 'Hangar'}</span>
-                
-                <strong style={{ color: '#000' }}>Stand type</strong><span style={{ color: '#475569' }}>Shell</span>
-                <strong style={{ color: '#000' }}>Stand size</strong><span style={{ color: '#475569' }}>9</span>
+            {(standNumber || hallNumber || standType) && (
+              <div className="header-box" style={{ flex: '1 1 350px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
+                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Exhibitor Stand Detail</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(80px,auto) 1fr minmax(70px,auto) 1fr', gap: '10px 15px', fontSize: '13px', lineHeight: '1.4' }}>
+                  <strong style={{ color: '#000' }}>Stand no.</strong><span style={{ color: '#475569' }}>{standNumber || '-'}</span>
+                  <strong style={{ color: '#000' }}>Hall no</strong><span style={{ color: '#475569' }}>{hallNumber || '-'}</span>
+                  
+                  <strong style={{ color: '#000' }}>Stand type</strong><span style={{ color: '#475569' }}>{standType || '-'}</span>
+                  <strong style={{ color: '#000' }}>Stand size</strong><span style={{ color: '#475569' }}>{standSize || '-'}</span>
 
-                <strong style={{ color: '#000' }}>Open side</strong><span style={{ color: '#475569' }}>1</span>
-                <span></span><span></span>
+                  <strong style={{ color: '#000' }}>Open side</strong><span style={{ color: '#475569' }}>{openSide || '-'}</span>
+                  <span></span><span></span>
+                </div>
               </div>
-            </div>
+            )}
 
           </div>
 
@@ -514,18 +564,8 @@ export default function FormDetailPage({ params }) {
           {formId === 'F02' ? renderF02Form() : null}
           {formId === 'F03' ? (isAddingBadge ? renderF03AddBadge() : renderF03List()) : null}
           {formId === 'F04' ? renderF04Form() : null}
-          {formId === 'F06' ? renderF06Form() : null}
-          {formId === 'F07' ? renderF07Form() : null}
-
-          <div className="contact-queries-footer card mt-20" style={{ display: formId === 'F03' && isAddingBadge ? 'none' : 'block' }}>
-            <h3 style={{ marginBottom: '20px', fontSize: '16px' }}>For any questions or queries, please contact</h3>
-            <div className="summary-list">
-              <div className="summary-row"><strong>Contact Person</strong><span>Subhas Chandra</span></div>
-              <div className="summary-row"><strong>Company name</strong><span>Tresub media pvt ltd</span></div>
-              <div className="summary-row"><strong>Mobile no</strong><span>+91 9899072636</span></div>
-              <div className="summary-row"><strong>Email</strong><span>neha@electricalmirror.net</span></div>
-            </div>
-          </div>
+          {formId === 'F05' ? renderF06Form() : null}
+          {formId === 'F06' ? renderF07Form() : null}
         </div>
       </main>
 

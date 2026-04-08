@@ -7,8 +7,8 @@ const formTitles = {
   'F02': 'Directory Map Board Lettering',
   'F03': 'Exhibitor Name Badges',
   'F04': 'Fascia Name - Shell Scheme Package',
-  'F06': 'Additional Furniture Requirements',
-  'F07': 'Electricity Charges for Designer Stalls'
+  'F05': 'Additional Furniture Requirements',
+  'F06': 'Electricity Charges for Designer Stalls'
 };
 
 const DB_PATH = path.join(process.cwd(), 'submissions.json');
@@ -21,7 +21,9 @@ export async function POST(req) {
     const newSubmission = {
       id: Date.now().toString(),
       created_at: new Date().toISOString(),
-      company_name: data.companyName || 'Unknown',
+      username: data.username || 'Unknown',
+      auth_company_name: data.authCompanyName || data.companyName || 'Unknown',
+      company_name: data.companyName || data.authCompanyName || 'Unknown',
       form_id: data.formId || 'N/A',
       form_title: formTitles[data.formId] || 'General Submission',
       email: data.email || null,

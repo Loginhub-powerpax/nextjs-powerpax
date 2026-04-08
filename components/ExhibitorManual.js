@@ -124,9 +124,7 @@ export default function ExhibitorManual() {
         </p>
 
         <p style={{ fontSize: '14px', color: '#555', marginBottom: '10px' }}>
-           <strong>Raw Space Booth Contractors must submit Stand design approval to Official Show Contractor before 27th May 2026 to:</strong><br/>
-           Mr. Abhishek Sharma: <em>abhishek.tresubmedia@gmail.com / abhishek@tresubmedia.com</em><br/>
-           Mr. Divyansh Kashyap: <em>design.emcm@gmail.com</em>
+           <strong>Raw Space Booth Contractors must submit Stand design approval to Official Show Contractor before 27th May 2026.</strong>
         </p>
 
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', color: '#555', marginTop: '15px' }}>
@@ -179,20 +177,7 @@ export default function ExhibitorManual() {
             <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Email:</strong> Marketing@mmexhibition.com / ashit.mmexhibition@gmail.com</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-           <div className="contact-card" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-               <h4 style={{ fontSize: '15px', color: '#000', marginBottom: '5px' }}>Mr. Shivam Divakar</h4>
-               <p style={{ fontSize: '13px', color: '#666', marginBottom: '10px' }}>Manager – Client Servicing (For Electrical, Stall Design &amp; Furniture)</p>
-               <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-phone" style={{ color: '#4CAF50', width: '20px' }}></i> 88991 01744</p>
-               <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-envelope" style={{ color: '#4CAF50', width: '20px' }}></i> shivam@tresubmedia.com</p>
-           </div>
-           <div className="contact-card" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-               <h4 style={{ fontSize: '15px', color: '#000', marginBottom: '5px' }}>Mr. Himanshu Pandey</h4>
-               <p style={{ fontSize: '13px', color: '#666', marginBottom: '10px' }}>Manager – Servicing (For Information on Exhibition Area &amp; Venue)</p>
-               <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-phone" style={{ color: '#4CAF50', width: '20px' }}></i> 9241098989</p>
-               <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-envelope" style={{ color: '#4CAF50', width: '20px' }}></i> design.emcm@gmail.com</p>
-           </div>
-        </div>
+
       </div>
     </div>
   );

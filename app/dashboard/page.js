@@ -10,8 +10,8 @@ const INITIAL_MANDATORY_FORMS = [
   { id: 'F02', title: 'Directory Map Board Lettering', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
   { id: 'F03', title: 'Exhibitor Name Badges', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
   { id: 'F04', title: 'Fascia Name - Shell Scheme Package', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
-  { id: 'F06', title: 'Additional Furniture Requirements', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
-  { id: 'F07', title: 'Electricity Charges for Designer Stalls', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' }
+  { id: 'F05', title: 'Additional Furniture Requirements', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F06', title: 'Electricity Charges for Designer Stalls', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' }
 ];
 
 export default function DashboardPage() {
@@ -65,6 +65,9 @@ export default function DashboardPage() {
       </div>
 
       <main className="dashboard-content" style={{ marginTop: '20px' }}>
+        
+        <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#0f172a', marginBottom: '20px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>Dashboard</h1>
+
         {activeTab === 'forms' ? (
           <section className="dashboard-section">
             <div className="section-title">
@@ -87,7 +90,7 @@ export default function DashboardPage() {
 
               <div style={{ flex: '1 1 30%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'left', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                  <p style={{ fontSize: '14px', color: '#0f172a', marginBottom: '20px' }}>Scan below QR code to access<br/>Exhibitor Manual on your<br/>mobile</p>
-                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.powerpaxindia.com/manual" alt="Exhibitor Manual QR Code" style={{ width: '120px', height: '120px' }} />
+                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://powerpax.tresubmedia.com/" alt="Exhibitor Manual QR Code" style={{ width: '120px', height: '120px' }} />
               </div>
             </div>
 
