@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import FormListItem from '../../components/FormListItem';
+import ExhibitorManual from '../../components/ExhibitorManual';
 import Image from 'next/image';
 
 const INITIAL_MANDATORY_FORMS = [
@@ -10,13 +11,15 @@ const INITIAL_MANDATORY_FORMS = [
   { id: 'F03', title: 'Exhibitor Name Badges', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
   { id: 'F04', title: 'Fascia Name', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
   { id: 'F05', title: 'Insurance Coverage Public Liability Refunds', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
+  { id: 'F06', title: 'Form 1: Fascia Name - Shell Scheme Package', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F07', title: 'Form 2: Additional Furniture Requirements', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F08', title: 'Form 3: Electricity Charges for Designer Stalls', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' }
 ];
-
-const INITIAL_OPTIONAL_FORMS = [];
 
 export default function DashboardPage() {
   const [mandatoryForms, setMandatoryForms] = useState(INITIAL_MANDATORY_FORMS);
   const [companyName, setCompanyName] = useState('Exhibitor Company');
+  const [activeTab, setActiveTab] = useState('forms'); // 'forms' or 'manual'
 
   useEffect(() => {
     // Load from local storage
@@ -48,22 +51,43 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="dashboard-content">
-        <section className="dashboard-section">
-          <div className="section-title">
-            <h2>My Forms</h2>
-            <p className="note">Note : Forms labeled <span className="text-orange">Mandatory</span> must be completed.</p>
-          </div>
+      <div className="dashboard-tabs" style={{ display: 'flex', borderBottom: '1px solid #ddd', padding: '0 20px', background: '#fff' }}>
+        <button 
+          onClick={() => setActiveTab('forms')}
+          style={{ padding: '15px 20px', border: 'none', background: 'none', fontSize: '15px', fontWeight: 'bold', borderBottom: activeTab === 'forms' ? '3px solid #84cc16' : '3px solid transparent', color: activeTab === 'forms' ? '#84cc16' : '#555', cursor: 'pointer' }}
+        >
+          My Forms
+        </button>
+        <button 
+          onClick={() => setActiveTab('manual')}
+          style={{ padding: '15px 20px', border: 'none', background: 'none', fontSize: '15px', fontWeight: 'bold', borderBottom: activeTab === 'manual' ? '3px solid #84cc16' : '3px solid transparent', color: activeTab === 'manual' ? '#84cc16' : '#555', cursor: 'pointer' }}
+        >
+          Exhibitor Manual
+        </button>
+      </div>
 
-          <div className="form-group-section">
-            <h3>Mandatory forms</h3>
-            <div className="form-list">
-              {mandatoryForms.map(form => (
-                <FormListItem key={form.id} {...form} />
-              ))}
+      <main className="dashboard-content" style={{ marginTop: '20px' }}>
+        {activeTab === 'forms' ? (
+          <section className="dashboard-section">
+            <div className="section-title">
+              <h2>My Forms</h2>
+              <p className="note">Note : Forms labeled <span className="text-orange">Mandatory</span> must be completed.</p>
             </div>
-          </div>
-        </section>
+
+            <div className="form-group-section">
+              <h3>Mandatory forms</h3>
+              <div className="form-list">
+                {mandatoryForms.map(form => (
+                  <FormListItem key={form.id} {...form} />
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className="dashboard-section">
+             <ExhibitorManual />
+          </section>
+        )}
       </main>
       
       <footer className="dashboard-footer">
