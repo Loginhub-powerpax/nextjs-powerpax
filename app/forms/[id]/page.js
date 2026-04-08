@@ -256,10 +256,6 @@ export default function FormDetailPage({ params }) {
       <div className="section-title text-center" style={{ textAlign: 'center', marginBottom: '30px' }}>
         <span className="highlight-yellow" style={{ fontSize: '13px', display: 'block', marginBottom: '5px' }}>FASCIA NAME &ndash; SHELL SCHEME PACKAGE</span>
       </div>
-      <div style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '20px', fontSize: '13px', color: '#475569' }}>
-         <strong>Return to:</strong> Abhishek Sharma, Tresub Media Pvt. Ltd., Office No. 14130, 14th Floor, Gaur City Mall, Gr. Noida.<br/>
-         <strong>Number:</strong> 76783 21482 | <strong>Email:</strong> email-design@tresubmedia.com / design.emcm@gmail.com
-      </div>
       <div className="form-row-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required /></div>
         <div className="form-row"><label>Booth No</label><input type="text" value={standNumber} onChange={e => setStandNumber(e.target.value)} className="gray-input" required /></div>
