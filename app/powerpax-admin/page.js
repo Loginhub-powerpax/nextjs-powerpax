@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -29,13 +28,11 @@ export default function AdminPage() {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase
-        .from('submissions')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setSubmissions(data || []);
+      const response = await fetch('/api/submissions');
+      if (!response.ok) throw new Error('Failed to fetch data');
+      const result = await response.json();
+      if (!result.success) throw new Error(result.error);
+      setSubmissions(result.data || []);
     } catch (err) {
       console.error("Fetch error:", err);
       setError(err.message);
@@ -91,8 +88,7 @@ export default function AdminPage() {
 
       {error && (
         <div style={{ background: '#ffeeee', color: '#cc0000', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #ffcccc' }}>
-          <strong>Database Connection Error:</strong> {error}
-          <p style={{marginTop: '10px', fontSize: '13px'}}>Hint: Please verify your Supabase API Key and Project URL in lib/supabase.js</p>
+          <strong>Connection Error:</strong> {error}
         </div>
       )}
 
