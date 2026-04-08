@@ -296,6 +296,7 @@ export default function FormDetailPage({ params }) {
       <div className="section-title text-center" style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h3 className="highlight-yellow" style={{ fontSize: '15px' }}>ADDITIONAL FURNITURE REQUIREMENTS</h3>
       </div>
+      <p style={{ fontSize: '13px', color: '#475569', marginBottom: '20px' }}>Please use this Form to order your furnishing needs. The STANDARD SHELL SCHEME package stand includes one Information Counter (T6), Two Chairs (C3) and one Waste Paper Basket. <strong style={{ textTransform: 'uppercase' }}>Order only your additional requirements</strong></p>
       <div className="form-row-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required /></div>
         <div className="form-row"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="gray-input" /></div>
@@ -330,9 +331,17 @@ export default function FormDetailPage({ params }) {
       <div className="section-title text-center" style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h3 className="highlight-yellow" style={{ fontSize: '15px' }}>ELECTRICITY CHARGES FOR DESIGNER STALLS</h3>
       </div>
+      <p style={{ fontSize: '13px', color: '#475569', marginBottom: '10px' }}>This form must be completed and returned by every exhibitor. If service is not required, please endorse &apos;NOT APPLICABLE&apos; and return/email to the address above.</p>
+      <p style={{ fontSize: '13px', fontWeight: 'bold', color: '#84cc16', marginBottom: '20px' }}>PLEASE TYPE/WRITE IN BLOCK LETTERS</p>
       <div className="form-row-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-        <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required /></div>
+        <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input uppercase-input" required /></div>
+        <div className="form-row"><label>Date</label><input type="date" value={dateField} onChange={e => setDateField(e.target.value)} className="gray-input" /></div>
+        <div className="form-row"><label>Booth No</label><input type="text" value={standNumber} onChange={e => setStandNumber(e.target.value)} className="gray-input" /></div>
+        <div className="form-row"><label>Fax</label><input type="text" value={fax} onChange={e => setFax(e.target.value)} className="gray-input" /></div>
+        <div className="form-row"><label>Address</label><input type="text" value={address} onChange={e => setAddress(e.target.value)} className="gray-input" /></div>
         <div className="form-row"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="gray-input" /></div>
+        <div className="form-row"><label>Tel</label><input type="tel" value={tel} onChange={e => setTel(e.target.value)} className="gray-input" /></div>
+        <div className="form-row"><label>Authorized by (Signature)</label><input type="text" placeholder="Type name to sign" className="gray-input" /></div>
       </div>
       <div className="form-row-grid mt-20">
         <div className="form-row">
