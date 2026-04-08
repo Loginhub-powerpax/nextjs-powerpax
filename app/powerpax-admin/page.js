@@ -183,10 +183,28 @@ export default function AdminPage() {
                     </div>
                   );
                 }
+                if (key === 'furnitureOrders' && value) {
+                  const orderedItems = Object.entries(value).filter(([_, item]) => item.qty > 0);
+                  if (orderedItems.length === 0) return null;
+                  return (
+                    <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
+                      <strong>Furniture Orders</strong>
+                      <div style={{width: '100%', background: '#f8f9fa', padding: '10px', borderRadius: '4px', marginTop: '10px', fontSize: '12px'}}>
+                        {orderedItems.map(([code, item], i) => (
+                           <div key={i} style={{marginBottom: '5px'}}>• Code {code}: {item.qty} units @ {item.price}/-</div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Exclude empty values or unnecessary objects
+                if (!value || typeof value === 'object') return null;
+
                 return (
                   <div key={key} className="summary-row">
                     <strong style={{textTransform: 'capitalize'}}>{key.replace(/([A-Z])/g, ' $1')}</strong>
-                    <span>{typeof value === 'object' ? JSON.stringify(value) : value || '-'}</span>
+                    <span>{value}</span>
                   </div>
                 );
               })}
