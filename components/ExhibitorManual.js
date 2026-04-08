@@ -5,13 +5,16 @@ export default function ExhibitorManual() {
         <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '10px' }}>
           Exhibitor Manual
         </h1>
-        <h2 style={{ fontSize: '18px', color: '#4CAF50' }}>
+        <h2 style={{ fontSize: '18px', color: '#4CAF50', marginBottom: '5px' }}>
           PowerPax India Renewable Energy Expo &ndash; Varanasi Edition
         </h2>
-        <p style={{ color: '#555', marginTop: '10px' }}>02nd &ndash; 03rd May 2026 | Deendayal Hasthkala Sankul, Varanasi</p>
+        <p style={{ color: '#555', marginTop: '10px' }}><strong>Event:</strong> 02nd &ndash; 03rd May 2026</p>
+        <p style={{ color: '#555', marginTop: '5px' }}><strong>Venue:</strong> Deendayal Hastkala Sankul, Post Office, Bada Lalpur, Chandmari, Varanasi, Airhe, Uttar Pradesh &ndash; 221002</p>
+        <p style={{ color: '#555', marginTop: '10px' }}><strong>Organised By:</strong> Renewable Mirror | <strong>Supported By:</strong> Government of Uttar Pradesh, UPNEDA, UPPCL</p>
+        <p style={{ color: '#555', marginTop: '10px' }}><a href="http://www.powerpaxindia.com" target="_blank" rel="noreferrer" style={{color: '#1976d2', textDecoration: 'none'}}>www.powerpaxindia.com</a></p>
       </div>
 
-      <div className="manual-section hidden-section" style={{ marginBottom: '30px' }}>
+      <div className="manual-section" style={{ marginBottom: '30px' }}>
         <h3 style={{ borderBottom: '2px solid #84cc16', paddingBottom: '10px', marginBottom: '15px', color: '#333' }}>
           1. Schedule of Events
         </h3>
@@ -21,17 +24,20 @@ export default function ExhibitorManual() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 1.6, fontSize: '14px', color: '#555' }}>
               <li><strong>Venue:</strong> Deendayal Hastkala Sankul</li>
               <li><strong>Duration:</strong> 02 May &ndash; 03 May, 2026</li>
-              <li><strong>Inauguration:</strong> 02 May &ndash; 11 A.M.</li>
-              <li><strong>Conference:</strong> 02 May &ndash; 11 A.M.</li>
+              <li><strong>Inauguration:</strong> 02 May &ndash; 11:00 AM</li>
+              <li><strong>Conference:</strong> 02 May &ndash; 11:00 AM</li>
+              <li><strong>Award Function:</strong> (TBA)</li>
+              <li style={{marginTop: '10px'}}><strong>Registration Schedule:</strong> 02 May (Sat) &ndash; 03 May (Sun) 2026</li>
+              <li><strong>Registration Hours:</strong> 10:00 AM to 5:00 PM</li>
             </ul>
           </div>
           <div className="info-box" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
             <h4 style={{ color: '#000', marginBottom: '10px' }}>Important Dates & Timelines</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 1.6, fontSize: '14px', color: '#555' }}>
               <li><strong>Stall Fabrication Start:</strong> 30th April (12:30 PM onwards)</li>
-              <li><strong>Setup Completion Deadline:</strong> 1st May (10:00 PM)</li>
+              <li><strong>Setup Completion Deadline:</strong> 1st May (08:00 PM)</li>
               <li><strong>Exhibition Dates:</strong> 2nd &ndash; 3rd May 2026</li>
-              <li><strong>Dismantling:</strong> 3rd May (After post event closing)</li>
+              <li><strong>Dismantling:</strong> 3rd May (after post-event closing)</li>
             </ul>
           </div>
         </div>
@@ -39,7 +45,7 @@ export default function ExhibitorManual() {
 
       <div className="manual-section" style={{ marginBottom: '30px' }}>
         <h3 style={{ borderBottom: '2px solid #84cc16', paddingBottom: '10px', marginBottom: '15px', color: '#333' }}>
-          2. Exhibition Guidelines
+          2. Exhibitor Manual Guidelines
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '15px', fontSize: '14px', color: '#555', lineHeight: 1.6 }}>
           <p><strong>1. Exhibition Overview:</strong> PowerPax India Renewable Energy Expo Varanasi 2026 will be held on 2–3 May. Exhibitors must follow all guidelines to ensure smooth operations, safety compliance, and a professional event experience.</p>
@@ -95,13 +101,14 @@ export default function ExhibitorManual() {
                 </tr>
               </tbody>
             </table>
+            <p style={{ marginTop: '15px', color: '#555', fontSize: '12px' }}><strong>Facilities Available Against Payment:</strong> Furniture items, 3-phase power, air compressor, personal security, cranes for machine shifting, stall fabricators, audio-video equipment, hostesses, catering services, etc.</p>
           </div>
 
           <div className="info-box" style={{ background: '#fff', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
              <h4 style={{ color: '#000', marginBottom: '10px' }}>Stalls Possession Timings</h4>
              <ul style={{ listStyle: 'disc', paddingLeft: '20px', lineHeight: 1.6, fontSize: '14px', color: '#555' }}>
-               <li><strong>Octonorm Stall:</strong> Possession &ndash; 1st May 2026 @ 11:00 am. Stall setup allowed only till 1st May @ 10:00 pm.</li>
-               <li><strong>Designer Stall (Raw Space):</strong> Possession &ndash; 30th April 2026 @ 11:00 am. Stall setup allowed only till 1st May 2026 @ 10:00 pm.</li>
+               <li><strong>Octonorm Stall:</strong> Possession &ndash; 1st May 2026 @ 11:00 AM. Setup allowed till 1st May @ 10:00 PM.</li>
+               <li><strong>Designer Stall (Raw Space):</strong> Possession &ndash; 30th April 2026 @ 11:00 AM. Setup allowed till 1st May 2026 @ 10:00 PM.</li>
              </ul>
           </div>
         </div>
@@ -109,20 +116,28 @@ export default function ExhibitorManual() {
 
       <div className="manual-section" style={{ marginBottom: '30px' }}>
         <h3 style={{ borderBottom: '2px solid #84cc16', paddingBottom: '10px', marginBottom: '15px', color: '#333' }}>
-          4. Technical Specifications & Deadlines for Contractors
+          4. Information for Booth Exhibitors / Contractors
         </h3>
         <p style={{ fontSize: '14px', color: '#555', marginBottom: '15px' }}>
-           <strong>Important:</strong> Setups to be completed by 1st May 2026. Order your Power Requirement during the buildup time to the Official Contractor by 27th April 2026.
-           Submit a copy of the Stand design Approval to: <em>abhishek.tresubmedia@gmail.com</em>, <em>abhishek@tresubmedia.com</em>, <em>design.emcm@gmail.com</em>.
+           <strong>Important:</strong> Setups must be completed by 1st May 2026. Power requirement must be ordered to the Official Contractor by 27th April 2026.<br />
+           <strong>Note:</strong> 100% payment mandatory to obtain NOC (No Objection Certificate) from the Organizer. Designs must be approved by the Official Contractor before the deadline. Any construction above permissible height will be rectified by the Official Contractor.
         </p>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', color: '#555' }}>
+        <p style={{ fontSize: '14px', color: '#555', marginBottom: '10px' }}>
+           <strong>Raw Space Booth Contractors must submit Stand design approval to Official Show Contractor before 27th May 2026 to:</strong><br/>
+           Mr. Abhishek Sharma: <em>abhishek.tresubmedia@gmail.com / abhishek@tresubmedia.com</em><br/>
+           Mr. Divyansh Kashyap: <em>design.emcm@gmail.com</em>
+        </p>
+
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', color: '#555', marginTop: '15px' }}>
           <tbody>
             <tr style={{ background: '#f8fafc' }}><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Exhibition Area</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>Exhibition Hall</td></tr>
-            <tr><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Max. Height for Island Booth</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>4m</td></tr>
-            <tr style={{ background: '#f8fafc' }}><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Max. Height of Common Sharing Wall</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>3m</td></tr>
-            <tr><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Exhibition Hall Flooring</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>PCC Floor</td></tr>
-            <tr style={{ background: '#f8fafc' }}><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Air-Conditioning</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>Centralized Existing Air Conditioned Hall</td></tr>
+            <tr><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Max height &ndash; Island Booth</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>4 m</td></tr>
+            <tr style={{ background: '#f8fafc' }}><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Max height &ndash; Common Wall / Sharing Wall / Back Wall</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>3 m</td></tr>
+            <tr><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Height allowance &ndash; stall outside multipurpose hall</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>7.5 ft</td></tr>
+            <tr style={{ background: '#f8fafc' }}><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Exhibition Hall Flooring</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>PCC Floor</td></tr>
+            <tr><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Loading Gate (W &times; H)</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>N/A</td></tr>
+            <tr style={{ background: '#f8fafc' }}><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}><strong>Air-conditioning</strong></td><td style={{ padding: '10px', border: '1px solid #e2e8f0' }}>Centralized existing air-conditioned hall</td></tr>
           </tbody>
         </table>
       </div>
@@ -133,31 +148,47 @@ export default function ExhibitorManual() {
         </h3>
         <div style={{ background: '#fffadf', borderLeft: '4px solid #f59e0b', padding: '15px', fontSize: '14px', color: '#555', lineHeight: 1.6 }}>
           <ul style={{ listStyle: 'disc', paddingLeft: '20px', marginBottom: '15px' }}>
-             <li><strong>Upto 24 sq mtr:</strong> Rs. 10,000/-</li>
-             <li><strong>25 mtr &amp; above:</strong> Rs. 15,000/-</li>
+             <li><strong>Up to 24 sq m:</strong> ₹10,000/-</li>
+             <li><strong>25 sq m &amp; above:</strong> ₹15,000/-</li>
              <li>Deposit to be paid by Stall Design Vendor.</li>
-             <li>Deposit will be refunded back 1 week after exhibition completion date (i.e. 10th May 2026).</li>
-             <li>If stall designing work (mainly) wooden, color, electrical, carpeting, etc., is not over by 10:00 pm on 1st May 2026 then Deposit will be not refunded.</li>
-             <li>If any damages made to venue property or any other damages then deposit will not be refunded.</li>
+             <li>Deposit refunded 1 week after exhibition completion (by 10th May 2026).</li>
+             <li>Deposit forfeited if stall work (wooden, colour, electrical, carpeting, etc.) is not completed by 10:00 PM on 1st May 2026.</li>
+             <li>Deposit forfeited if any damage is caused to venue property.</li>
           </ul>
-          <p style={{ margin: 0 }}><strong>Bank Details:</strong> Payment favouring <em>Tresub Media Private Limited</em>. ICICI BANK LTD, Branch &ndash; Greater Noida. A/C No- 739105000628, IFSC: ICIC0007391.</p>
+          <p style={{ margin: 0, marginTop: '20px' }}>
+            <strong>Payment Terms & Details:</strong><br />
+            Payment in favour of <strong>Tresub Media Private Limited</strong>, payable at Noida, U.P.<br/>
+            Terms: 50% in advance + 50% before the event. Subject to Uttar Pradesh jurisdiction.<br/><br/>
+            <strong>Bank Details:</strong> <br/>
+            Bank: ICICI Bank Ltd., Branch &ndash; Greater Noida-Gaur City 2, Gautam Buddha Nagar, Noida, U.P. &ndash; 201009.<br/>
+            A/C No: 739105000628. IFSC: ICIC0007391.
+          </p>
         </div>
       </div>
 
       <div className="manual-section">
         <h3 style={{ borderBottom: '2px solid #84cc16', paddingBottom: '10px', marginBottom: '15px', color: '#333' }}>
-          6. Contact Information
+          6. Contact Information & Official Contractor
         </h3>
+        
+        <div className="info-box" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
+            <h4 style={{ color: '#000', marginBottom: '5px' }}>Official Show Contractor &ndash; Mm Media & Exhibition</h4>
+            <p style={{ fontSize: '13px', color: '#555', marginBottom: '10px' }}>Covers shell scheme construction, custom-built booths, rental furniture, electrical fitting installation, plumbing services, A/V equipment rental, water & drainage, and temporary staff services.</p>
+            <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Website:</strong> www.mmexhibition.com</p>
+            <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Phone:</strong> 9241098989 (Himanshu Pandey) / 97187 25782 (Mukesh)</p>
+            <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Email:</strong> Marketing@mmexhibition.com / ashit.mmexhibition@gmail.com</p>
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
            <div className="contact-card" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                <h4 style={{ fontSize: '15px', color: '#000', marginBottom: '5px' }}>Mr. Shivam Divakar</h4>
-               <p style={{ fontSize: '13px', color: '#666', marginBottom: '10px' }}>Manager Client Servicing (For Electrical, Stall Design &amp; Furniture)</p>
+               <p style={{ fontSize: '13px', color: '#666', marginBottom: '10px' }}>Manager – Client Servicing (For Electrical, Stall Design &amp; Furniture)</p>
                <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-phone" style={{ color: '#4CAF50', width: '20px' }}></i> 88991 01744</p>
                <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-envelope" style={{ color: '#4CAF50', width: '20px' }}></i> shivam@tresubmedia.com</p>
            </div>
            <div className="contact-card" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                <h4 style={{ fontSize: '15px', color: '#000', marginBottom: '5px' }}>Mr. Himanshu Pandey</h4>
-               <p style={{ fontSize: '13px', color: '#666', marginBottom: '10px' }}>Manager Servicing (For Information on Exhibition Area &amp; Venue)</p>
+               <p style={{ fontSize: '13px', color: '#666', marginBottom: '10px' }}>Manager – Servicing (For Information on Exhibition Area &amp; Venue)</p>
                <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-phone" style={{ color: '#4CAF50', width: '20px' }}></i> 9241098989</p>
                <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><i className="fas fa-envelope" style={{ color: '#4CAF50', width: '20px' }}></i> design.emcm@gmail.com</p>
            </div>

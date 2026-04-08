@@ -7,7 +7,6 @@ const formTitles = {
   'F02': 'Directory Map Board Lettering',
   'F03': 'Exhibitor Name Badges',
   'F04': 'Fascia Name - Shell Scheme Package',
-  'F05': 'Insurance Coverage Public Liability Refunds',
   'F06': 'Additional Furniture Requirements',
   'F07': 'Electricity Charges for Designer Stalls'
 };
