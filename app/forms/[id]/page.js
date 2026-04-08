@@ -254,7 +254,11 @@ export default function FormDetailPage({ params }) {
   const renderF04Form = () => (
     <form className="form-work-area card mt-20" onSubmit={handleSubmit}>
       <div className="section-title text-center" style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <span className="highlight-yellow" style={{ fontSize: '13px' }}>FASCIA NAME &ndash; SHELL SCHEME PACKAGE</span>
+        <span className="highlight-yellow" style={{ fontSize: '13px', display: 'block', marginBottom: '5px' }}>FASCIA NAME &ndash; SHELL SCHEME PACKAGE</span>
+      </div>
+      <div style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '20px', fontSize: '13px', color: '#475569' }}>
+         <strong>Return to:</strong> Abhishek Sharma, Tresub Media Pvt. Ltd., Office No. 14130, 14th Floor, Gaur City Mall, Gr. Noida.<br/>
+         <strong>Number:</strong> 76783 21482 | <strong>Email:</strong> email-design@tresubmedia.com / design.emcm@gmail.com
       </div>
       <div className="form-row-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required /></div>
@@ -263,13 +267,16 @@ export default function FormDetailPage({ params }) {
         <div className="form-row"><label>Address</label><input type="text" value={address} onChange={e => setAddress(e.target.value)} className="gray-input" required /></div>
         <div className="form-row"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="gray-input" required /></div>
         <div className="form-row"><label>Tel / Mobile</label><input type="tel" value={tel} onChange={e => setTel(e.target.value)} className="gray-input" /></div>
+        <div className="form-row" style={{ gridColumn: 'span 2' }}><label>Authorized by (Signature)</label><input type="text" placeholder="Type name to sign" className="gray-input" /></div>
       </div>
       <div className="form-row mt-20">
         <label>1. FASCIA NAME (Max 30 Letters)</label>
+        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '5px' }}>Standard English alphabet, write in block letters.</p>
         <input type="text" value={fasciaName} onChange={e => setFasciaName(e.target.value.substring(0,30))} className="gray-input uppercase-input" style={{ letterSpacing: '4px' }} placeholder="BLOCK LETTERS" required />
       </div>
       <div className="form-row mt-20">
         <label>2. Customized Fascia</label>
+        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Print-ready file 72&quot; (W) &times; 12&quot; (H); quotation from Tresub Media Pvt. Ltd.</p>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <input type="checkbox" checked={customFascia} onChange={e => setCustomFascia(e.target.checked)} />
           <span>Please send us a quotation based on our attached logo (Tick if required)</span>
