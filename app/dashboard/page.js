@@ -6,14 +6,13 @@ import ExhibitorManual from '../../components/ExhibitorManual';
 import Image from 'next/image';
 
 const INITIAL_MANDATORY_FORMS = [
-  { id: 'F01', title: 'Show Directory (Company Profile & Product Index)', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
-  { id: 'F02', title: 'Directory Map Board Lettering', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
-  { id: 'F03', title: 'Exhibitor Name Badges', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
-  { id: 'F04', title: 'Fascia Name', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
-  { id: 'F05', title: 'Insurance Coverage Public Liability Refunds', status: 'Pending', deadline: '25 Apr 2026', type: 'Mandatory' },
-  { id: 'F06', title: 'Form 1: Fascia Name - Shell Scheme Package', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
-  { id: 'F07', title: 'Form 2: Additional Furniture Requirements', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
-  { id: 'F08', title: 'Form 3: Electricity Charges for Designer Stalls', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' }
+  { id: 'F01', title: 'Show Directory (Company Profile & Product Index)', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F02', title: 'Directory Map Board Lettering', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F03', title: 'Exhibitor Name Badges', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F04', title: 'Fascia Name - Shell Scheme Package', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F05', title: 'Insurance Coverage Public Liability Refunds', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F06', title: 'Additional Furniture Requirements', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' },
+  { id: 'F07', title: 'Electricity Charges for Designer Stalls', status: 'Pending', deadline: '29 Apr 2026', type: 'Mandatory' }
 ];
 
 export default function DashboardPage() {
