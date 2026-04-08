@@ -321,36 +321,53 @@ export default function FormDetailPage({ params }) {
   const renderF04Form = () => (
     <form className="form-work-area card mt-20" onSubmit={handleSubmit}>
       <div className="section-title text-center" style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <span className="highlight-yellow" style={{ fontSize: '13px', display: 'block', marginBottom: '5px' }}>FASCIA NAME &ndash; SHELL SCHEME PACKAGE</span>
+        <span style={{ fontSize: '14px', fontWeight: 'bold', background: '#fef08a', padding: '5px 15px', color: '#000', textTransform: 'uppercase' }}>
+          THIS FORM APPLIES TO SHELL SCHEME BOOTH EXHIBITORS ONLY
+        </span>
       </div>
-      <div className="form-row-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-        <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required /></div>
-        <div className="form-row"><label>Booth No</label><input type="text" value={standNumber} onChange={e => setStandNumber(e.target.value)} className="gray-input" required /></div>
-        <div className="form-row"><label>Date</label><input type="date" value={dateField} onChange={e => setDateField(e.target.value)} className="gray-input" required /></div>
-        <div className="form-row"><label>Address</label><input type="text" value={address} onChange={e => setAddress(e.target.value)} className="gray-input" required /></div>
-        <div className="form-row"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="gray-input" required /></div>
-        <div className="form-row"><label>Tel / Mobile</label><input type="tel" value={tel} onChange={e => setTel(e.target.value)} className="gray-input" /></div>
-        <div className="form-row" style={{ gridColumn: 'span 2' }}><label>Authorized by (Signature)</label><input type="text" placeholder="Type name to sign" className="gray-input" /></div>
+
+      <div style={{ marginBottom: '25px' }}>
+        <h3 style={{ fontSize: '16px', color: '#0f172a', marginBottom: '15px' }}>Fascia Name Details</h3>
+        <p style={{ fontSize: '13px', color: '#334155', fontWeight: 'bold', margin: '0 0 5px 0' }}>Company Name and Stand Number to appear on our BOOTH FASCIA as:</p>
+        <p style={{ fontSize: '13px', background: '#fef08a', display: 'inline-block', padding: '2px 5px', fontWeight: 'bold', color: '#000', margin: '0' }}>(Maximum 40 characters including spaces.)</p>
       </div>
-      <div className="form-row mt-20">
-        <label>1. FASCIA NAME (Max 30 Letters)</label>
-        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '5px' }}>Standard English alphabet, write in block letters.</p>
-        <input type="text" value={fasciaName} onChange={e => setFasciaName(e.target.value.substring(0,30))} className="gray-input uppercase-input" style={{ letterSpacing: '4px' }} placeholder="BLOCK LETTERS" required />
+
+      <div className="form-row">
+        <label>Company Name</label>
+        <input 
+          type="text" 
+          value={fasciaName} 
+          onChange={e => setFasciaName(e.target.value.substring(0,40).toUpperCase())} 
+          className="gray-input uppercase-input" 
+          placeholder="RENEWABLE MIRROR" 
+          required 
+        />
+        <span style={{ fontSize: '11px', color: '#64748b' }}>(Capital Letters only)</span>
       </div>
-      <div className="form-row mt-20">
-        <label>2. Customized Fascia</label>
-        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Print-ready file 72&quot; (W) &times; 12&quot; (H); quotation from Tresub Media Pvt. Ltd.</p>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <input type="checkbox" checked={customFascia} onChange={e => setCustomFascia(e.target.checked)} />
-          <span>Please send us a quotation based on our attached logo (Tick if required)</span>
+
+      <div className="form-row-grid mt-20" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="form-row">
+          <label>Stand Number</label>
+          <input type="text" value={standNumber} onChange={e => setStandNumber(e.target.value)} className="gray-input" required />
+        </div>
+        <div className="form-row">
+          <label>Hall Number</label>
+          <input type="text" value={hallNumber} onChange={e => setHallNumber(e.target.value)} className="gray-input" required />
+        </div>
+        <div className="form-row">
+          <label>Number Of Sides Open</label>
+          <input type="number" value={productCategory || ''} onChange={e => setProductCategory(e.target.value)} className="gray-input" min="1" max="4" required />
         </div>
       </div>
-      {(customFascia) && (
-        <div className="logo-upload-box">
-          <input type="file" accept=".png,.jpg,.jpeg" onChange={handleLogoUpload} />
-          {logoPreview && <img src={logoPreview} style={{maxHeight:'50px', marginTop: '10px'}} alt="Logo" />}
-        </div>
-      )}
+
+      <div style={{ marginTop: '30px', fontSize: '12px', color: '#475569', lineHeight: '1.6' }}>
+        <ul style={{ listStyle: 'disc', paddingLeft: '20px' }}>
+          <li>Only one company name as per the contract signed is allowed on each exhibiting stand, unless organisers grant written approval. This is normally based on booth sizes of 9m&sup2; and above.</li>
+          <li>No alteration / modification on the fascia name board provided by the official booth contractor is permitted.</li>
+          <li><strong style={{ background: '#fef08a', padding: '2px 5px', color: '#000' }}>Fascia name once submitted in the online manual form will be charged on site @ INR 2,000/- each change in fascia.</strong></li>
+        </ul>
+      </div>
+
       <div className="form-actions-footer mt-40">
         <button type="submit" className="btn-save">{isComplete ? "Update Form" : "Save Changes"}</button>
       </div>
@@ -461,13 +478,36 @@ export default function FormDetailPage({ params }) {
 
       <main className="form-detail-content">
         <div className="container">
-          <div className="wide-info-card" style={{ display: formId === 'F03' && isAddingBadge ? 'none' : 'block' }}>
-            <h3>Company detail</h3>
-            <div className="summary-list">
-               <div className="summary-row"><strong>Company name</strong><span>{companyName}</span></div>
-               <div className="summary-row"><strong>Email</strong><span>{email}</span></div>
-               <div className="summary-row"><strong>Address</strong><span>{address}</span></div>
+          <div style={{ display: formId === 'F03' && isAddingBadge ? 'none' : 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+            
+            {/* Left Box: Company detail */}
+            <div style={{ flex: '1 1 50%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
+              <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Company detail</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '10px', fontSize: '13px', lineHeight: '1.4' }}>
+                <strong style={{ color: '#000' }}>Company name</strong><span style={{ color: '#475569' }}>{companyName || 'Tresub Media Pvt. Ltd.'}</span>
+                <strong style={{ color: '#000' }}>Contact Person</strong><span style={{ color: '#475569' }}>{contactPerson || 'Ms. Neha Chauhan'}</span>
+                <strong style={{ color: '#000' }}>Email</strong><span style={{ color: '#475569' }}>{email || 'neha@renewablemirror.com'}</span>
+                <strong style={{ color: '#000' }}>Mobile no.</strong><span style={{ color: '#475569' }}>{mobile || '+91 9873168426'}</span>
+                <strong style={{ color: '#000' }}>Address</strong><span style={{ color: '#475569' }}>{address || 'Gaur City Mall, Office No. 14130-14130A, Floor 13, Greater Noida'}</span>
+                <strong style={{ color: '#000' }}>GST Number</strong><span style={{ color: '#475569' }}>-</span>
+              </div>
             </div>
+
+            {/* Right Box: Exhibitor Stand Detail */}
+            <div style={{ flex: '1 1 40%', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
+              <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Exhibitor Stand Detail</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(80px,auto) 1fr minmax(70px,auto) 1fr', gap: '10px 15px', fontSize: '13px', lineHeight: '1.4' }}>
+                <strong style={{ color: '#000' }}>Stand no.</strong><span style={{ color: '#475569' }}>{standNumber || 'C18'}</span>
+                <strong style={{ color: '#000' }}>Hall no</strong><span style={{ color: '#475569' }}>{hallNumber || 'Hangar'}</span>
+                
+                <strong style={{ color: '#000' }}>Stand type</strong><span style={{ color: '#475569' }}>Shell</span>
+                <strong style={{ color: '#000' }}>Stand size</strong><span style={{ color: '#475569' }}>9</span>
+
+                <strong style={{ color: '#000' }}>Open side</strong><span style={{ color: '#475569' }}>1</span>
+                <span></span><span></span>
+              </div>
+            </div>
+
           </div>
 
           {formId === 'F01' ? renderF01Form() : null}
