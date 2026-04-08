@@ -182,14 +182,81 @@ export default function FormDetailPage({ params }) {
   // ------------------------- F01: COMPANY PROFILE -------------------------
   const renderF01Form = () => (
     <form className="form-work-area card mt-20" onSubmit={handleSubmit}>
-      <div className="section-title"><h3>Company Profile</h3></div>
-      <div className="form-row"><label>Company Name</label><input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required /></div>
-      <div className="form-row-grid"><div className="form-row"><label>Contact Person</label><input type="text" value={contactPerson} onChange={e => setContactPerson(e.target.value)} className="gray-input" required /></div><div className="form-row"><label>Address</label><input type="text" value={address} onChange={e => setAddress(e.target.value)} className="gray-input" required /></div></div>
-      <div className="form-row-grid"><div className="form-row"><label>Country</label><input type="text" value={country} onChange={e => setCountry(e.target.value)} className="gray-input" required /></div><div className="form-row"><label>Tel</label><input type="text" value={tel} onChange={e => setTel(e.target.value)} className="gray-input" /></div><div className="form-row"><label>Fax</label><input type="text" value={fax} onChange={e => setFax(e.target.value)} className="gray-input" /></div></div>
-      <div className="form-row-grid"><div className="form-row"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="gray-input" required /></div><div className="form-row"><label>Website</label><input type="text" value={website} onChange={e => setWebsite(e.target.value)} className="gray-input" /></div></div>
-      <div className="form-row" style={{ maxWidth: '400px' }}><label>Mobile Number</label><input type="tel" value={mobile} onChange={e => setMobile(e.target.value)} className="gray-input" required /></div>
-      <div className="form-row mt-20"><label>Description Words (max 100)</label><textarea value={description} onChange={e => setDescription(e.target.value)} className="gray-input" rows="5" required></textarea></div>
-      <div className="form-actions-footer mt-40"><button type="submit" className="btn-save">{isComplete ? "Update Form" : "Save Changes"}</button></div>
+      <div className="section-title">
+        <h3 className="highlight-yellow" style={{ fontSize: '15px' }}>Company Profile</h3>
+      </div>
+      
+      <div style={{ fontSize: '12px', color: '#475569', marginBottom: '20px', lineHeight: '1.6' }}>
+        <p style={{ marginBottom: '10px' }}>Each contracted booth in the exhibition is entitled to a free insertion of 100 words in the <strong>SHOW E-DIRECTORY</strong> describing the company, company&apos;s products / services without picture. Exhibitors are encouraged to use their full 100 words but should not exceed this limit. <strong>Excess text will be edited without further consultation with the exhibitor.</strong></p>
+        <p><strong><u>Please note:</u> Your adherence to the specified deadline is imperative to guarantee inclusion into the SHOW E-DIRECTORY.</strong></p>
+        <ul style={{ listStyle: 'disc', paddingLeft: '20px', marginTop: '5px' }}>
+          <li>Complete all sections.</li>
+          <li>Please type using upper and lower cases throughout</li>
+          <li>The text should be presented in one paragraph</li>
+        </ul>
+      </div>
+
+      <div className="form-row">
+        <label>Name of Exhibiting Company</label>
+        <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="gray-input" required />
+        <span style={{ fontSize: '11px', color: '#64748b' }}>(As it will appear in the directory) in ENGLISH</span>
+      </div>
+      
+      <div className="form-row-grid mt-20">
+        <div className="form-row"><label>Name of Contact Person</label><input type="text" value={contactPerson} onChange={e => setContactPerson(e.target.value)} className="gray-input" required /></div>
+        <div className="form-row"><label>Address</label><input type="text" value={address} onChange={e => setAddress(e.target.value)} className="gray-input" required /></div>
+      </div>
+      
+      <div className="form-row-grid">
+        <div className="form-row"><label>Country</label><input type="text" value={country} onChange={e => setCountry(e.target.value)} className="gray-input" required /></div>
+        <div className="form-row"><label>Tel</label><input type="text" value={tel} onChange={e => setTel(e.target.value)} className="gray-input" /></div>
+        <div className="form-row"><label>Fax</label><input type="text" value={fax} onChange={e => setFax(e.target.value)} className="gray-input" /></div>
+      </div>
+      
+      <div className="form-row-grid">
+        <div className="form-row"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} className="gray-input" required /></div>
+        <div className="form-row"><label>Website</label><input type="text" value={website} onChange={e => setWebsite(e.target.value)} className="gray-input" /></div>
+      </div>
+      
+      <div className="form-row" style={{ maxWidth: '400px' }}>
+        <label>Mobile Number</label>
+        <input type="tel" value={mobile} onChange={e => setMobile(e.target.value)} className="gray-input" required />
+      </div>
+      
+      <div className="form-row mt-20">
+        <label>Description Type words to be inserted in the SHOW DIRECTORY</label>
+        <textarea value={description} onChange={e => setDescription(e.target.value)} className="gray-input" rows="5" required></textarea>
+        <span style={{ fontSize: '11px', color: '#64748b' }}>(ENGLISH VERSION, 100 words only)</span>
+      </div>
+
+      <div className="form-row mt-20">
+        <label>Company Logo</label>
+        <div className="logo-upload-box" style={{ background: '#f8fafc', padding: '15px', border: '1px dashed #cbd5e1', borderRadius: '4px' }}>
+          <input type="file" accept=".png,.jpg,.jpeg" onChange={handleLogoUpload} />
+          {logoPreview && <img src={logoPreview} style={{maxHeight:'80px', marginTop: '10px'}} alt="Logo" />}
+        </div>
+        <span style={{ fontSize: '11px', color: '#64748b' }}>Allowed file types .png, .jpg, .jpeg Max file size 2 MB.</span>
+      </div>
+
+      <div className="section-title mt-40">
+        <h3 className="highlight-yellow" style={{ fontSize: '15px' }}>Product Index</h3>
+      </div>
+      
+      <div style={{ fontSize: '12px', color: '#475569', marginBottom: '20px', lineHeight: '1.6' }}>
+        <p style={{ marginBottom: '10px' }}>Information provided here will be used to compile the product indices in the SHOW E-DIRECTORY. These indices will assist trade visitors to identify your company&apos;s products / services.</p>
+        <p style={{ marginBottom: '10px' }}>Please select the product categories under which your company should be listed in the <strong>SHOW E-DIRECTORY</strong>. If any of your products do not fall under these categories, kindly specify on the &quot;Others&quot; Column provided. Please note that a new heading for these products will not be guaranteed.</p>
+        <p style={{ marginBottom: '10px' }}>As an additional service to exhibitor, the Organiser&apos;s will allow <strong>FREE</strong> listing in more than one Product Category.</p>
+        <p><strong><u>Please note:</u> Your adherence to the specified deadline is imperative to guarantee inclusion into the SHOW E-DIRECTORY.</strong></p>
+      </div>
+
+      <div className="form-row">
+        <label>Please select as appropriate (or type &quot;other | category&quot;)</label>
+        <input type="text" value={productCategory || ''} onChange={e => setProductCategory(e.target.value)} className="gray-input" placeholder="e.g. other | Media" required />
+      </div>
+
+      <div className="form-actions-footer mt-40">
+        <button type="submit" className="btn-save">{isComplete ? "Update Form" : "Save Changes"}</button>
+      </div>
     </form>
   );
 
