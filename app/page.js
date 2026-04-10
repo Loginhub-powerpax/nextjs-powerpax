@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -17,8 +16,35 @@ export default function LoginPage() {
   useEffect(() => {
     // Entrance animation trigger
     const timer = setTimeout(() => setIsVisible(true), 100);
+
+    // Warm up the server immediately on page load.
+    // If the server just cold-started, this ping gives it time to boot
+    // before the user submits the login form.
+    fetch('/api/ping', { cache: 'no-store' }).catch(() => {});
+
     return () => clearTimeout(timer);
   }, []);
+
+  /**
+   * Fetch with automatic retry on network failure (handles cold-start).
+   * Retries up to `maxRetries` times with exponential backoff.
+   */
+  const fetchWithRetry = async (url, options, maxRetries = 3) => {
+    let lastError;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const res = await fetch(url, options);
+        return res; // success — return immediately
+      } catch (err) {
+        lastError = err;
+        if (attempt < maxRetries - 1) {
+          // Wait: 800ms, 1600ms, 3200ms ...
+          await new Promise(r => setTimeout(r, 800 * Math.pow(2, attempt)));
+        }
+      }
+    }
+    throw lastError;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,7 +52,7 @@ export default function LoginPage() {
     setErrorMsg('');
 
     try {
-      const response = await fetch('/api/auth', {
+      const response = await fetchWithRetry('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -51,7 +77,7 @@ export default function LoginPage() {
       }, 1000);
 
     } catch (err) {
-      setErrorMsg(err.message || 'Authentication failed');
+      setErrorMsg(err.message || 'Unable to connect. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -71,13 +97,10 @@ export default function LoginPage() {
       >
         <div className="card-header">
           <div className="portal-logo">
-            <Image 
+            <img 
               src="/logo.gif" 
               alt="Exhibitor Portal Logo" 
-              width={180} 
-              height={60}
-              priority
-              style={{ objectFit: 'contain' }}
+              style={{ width: '180px', height: 'auto', objectFit: 'contain' }}
             />
           </div>
           <h1>PowerPax India</h1>
