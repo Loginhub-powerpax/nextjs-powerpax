@@ -10,19 +10,13 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    // Entrance animation trigger
-    const timer = setTimeout(() => setIsVisible(true), 100);
-
     // Warm up the server immediately on page load.
     // If the server just cold-started, this ping gives it time to boot
     // before the user submits the login form.
     fetch('/api/ping', { cache: 'no-store' }).catch(() => {});
-
-    return () => clearTimeout(timer);
   }, []);
 
   /**
@@ -87,14 +81,7 @@ export default function LoginPage() {
     <div className="login-wrapper">
       <div className="bg-overlay"></div>
       
-      <div 
-        className="login-card"
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
-        }}
-      >
+      <div className="login-card">
         <div className="card-header">
           <div className="portal-logo">
             <img 
