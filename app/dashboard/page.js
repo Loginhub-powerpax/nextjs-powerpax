@@ -202,7 +202,7 @@ export default function DashboardPage() {
             <section>
               <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Participation Letter</h1>
               
-              {!mandatoryForms.find(f => f.id === 'F01')?.status === 'Complete' && localStorage.getItem('submittedForms') && !JSON.parse(localStorage.getItem('submittedForms'))['F01'] ? (
+              {mandatoryForms.find(f => f.id === 'F01')?.status !== 'Complete' && localStorage.getItem('submittedForms') && !JSON.parse(localStorage.getItem('submittedForms'))['F01'] ? (
                 <div style={{ background: '#fff', padding: '60px 40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                   <div style={{ fontSize: '50px', color: '#94a3b8', marginBottom: '20px' }}>
                     <i className="fas fa-lock"></i>
