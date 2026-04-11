@@ -11,8 +11,10 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     // Warm up the server immediately on page load.
     // If the server just cold-started, this ping gives it time to boot
     // before the user submits the login form.

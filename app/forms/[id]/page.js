@@ -189,6 +189,8 @@ export default function FormDetailPage({ params }) {
       const F03Data = parsed[formId] || {};
       F03Data.badges = updatedBadges;
       F03Data.formId = formId; 
+      F03Data.username = authUsername; // Ensure username is saved
+      F03Data.authCompanyName = authCompanyName;
       F03Data.companyName = authCompanyName;
       F03Data.timestamp = Date.now();
       parsed[formId] = F03Data;

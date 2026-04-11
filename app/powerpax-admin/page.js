@@ -110,10 +110,10 @@ export default function AdminPage() {
     );
   }
 
-  // Group submissions by Company Name for consistency
+  // Group submissions by unique Username for maximum reliability
+  // Typo-tolerant grouping: even if they type their name wrong in a form, they log in with one username
   const groupedSubmissions = submissions.reduce((acc, sub) => {
-    // Priority: auth_company_name -> company_name -> username
-    const key = (sub.auth_company_name || sub.company_name || sub.username || 'Unknown').trim();
+    const key = (sub.username || 'Unknown').trim();
     if (!acc[key]) acc[key] = [];
     acc[key].push(sub);
     return acc;
@@ -169,7 +169,7 @@ export default function AdminPage() {
                         <td style={{padding: '12px', whiteSpace: 'nowrap'}}>{new Date(recentSub.created_at).toLocaleString()}</td>
                         <td style={{padding: '12px'}}>
                           <div style={{fontWeight: 'bold', color: '#1a1a1a'}}>{recentSub.auth_company_name || recentSub.company_name || recentSub.username}</div>
-                          <div style={{fontSize: '11px', color: '#64748b'}}>User: {key}</div>
+                          <div style={{fontSize: '11px', color: '#64748b'}}>User: {recentSub.username}</div>
                         </td>
                         <td style={{padding: '12px'}}>
                           <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>

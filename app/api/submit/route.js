@@ -45,8 +45,23 @@ export async function POST(req) {
       }
     }
 
-    // 3. Append and save
-    submissions.unshift(newSubmission); // Add to top
+    // 3. Upsert logic: Find existing entry for this user and form
+    const existingIndex = submissions.findIndex(s => s.username === newSubmission.username && s.form_id === newSubmission.form_id);
+    
+    if (existingIndex > -1) {
+      // Update existing
+      submissions[existingIndex] = {
+        ...submissions[existingIndex],
+        ...newSubmission,
+        id: submissions[existingIndex].id, // Keep original ID
+        created_at: submissions[existingIndex].created_at, // Keep original creation time
+        updated_at: new Date().toISOString() // Track update time
+      };
+    } else {
+      // Append new
+      submissions.unshift(newSubmission);
+    }
+    
     await fs.writeFile(DB_PATH, JSON.stringify(submissions, null, 2));
 
     return NextResponse.json({ success: true });
