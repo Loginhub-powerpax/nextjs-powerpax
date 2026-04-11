@@ -546,7 +546,9 @@ export default function FormDetailPage({ params }) {
         <button type="submit" className="btn-save">{isComplete ? "Update Form" : "Save Changes"}</button>
       </div>
     </form>
-    return (
+  );
+
+  return (
     <div className="form-detail-wrapper" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', fontFamily: 'sans-serif' }}>
       <header className="dashboard-header thin" style={{ background: '#fff', padding: '10px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #84cc16' }}>
         <div className="header-left"><span style={{ fontSize: '14px' }}>Welcome, <strong style={{color: '#84cc16'}}>{authCompanyName}</strong></span></div>

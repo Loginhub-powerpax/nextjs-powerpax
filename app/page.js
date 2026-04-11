@@ -14,150 +14,104 @@ export default function LoginPage() {
     setIsMounted(true);
   }, []);
 
-      try {
-        const res = await fetch(url, options);
-        return res; // success — return immediately
-      } catch (err) {
-        lastError = err;
-        if (attempt < maxRetries - 1) {
-          // Wait: 800ms, 1600ms, 3200ms ...
-          await new Promise(r => setTimeout(r, 800 * Math.pow(2, attempt)));
-        }
-      }
-    }
-    throw lastError;
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (formData) => {
     setIsLoading(true);
     setErrorMsg('');
-
+    
     try {
-      const response = await fetchWithRetry('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Authentication failed');
+      const result = await loginAction(formData);
+      
+      if (result.success) {
+        localStorage.setItem('companyName', result.user.company_name);
+        localStorage.setItem('exhibitorData', JSON.stringify(result.user));
+        router.push('/dashboard');
+      } else {
+        setErrorMsg(result.error || 'Login failed');
+        setIsLoading(false);
       }
-
-      // Store exhibitor data for dashboard and forms
-      if (typeof window !== 'undefined' && data.user) {
-        localStorage.setItem('companyName', data.user.company_name || 'Exhibitor Company');
-        localStorage.setItem('exhibitorData', JSON.stringify(data.user));
-      }
-
-      setIsSuccess(true);
-      setTimeout(() => {
-          setIsSuccess(false);
-          router.push('/dashboard');
-      }, 1000);
-
     } catch (err) {
-      setErrorMsg(err.message || 'Unable to connect. Please try again.');
-    } finally {
+      console.error("Login catch error:", err);
+      setErrorMsg("Connection error. Please try again.");
       setIsLoading(false);
     }
   };
 
+  if (!isMounted) return null;
+
   return (
-    <div className="login-wrapper">
-      <div className="bg-overlay"></div>
-      
-      <div className="login-card">
-        <div className="card-header">
-          <div className="portal-logo">
-            <img 
-              src="/logo.gif" 
-              alt="Exhibitor Portal Logo" 
-              style={{ width: '180px', height: 'auto', objectFit: 'contain' }}
+    <div className="login-wrapper" style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)', fontFamily: 'sans-serif' }}>
+      <div className="login-card" style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px', position: 'relative', zIndex: 10 }}>
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <img src="/powerpax_logo.gif" alt="Logo" style={{ height: '60px', marginBottom: '20px' }} />
+          <h1 style={{ fontSize: '24px', margin: '0 0 10px 0', color: '#0f172a' }}>Exhibitor Portal</h1>
+          <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Welcome back! Please login to your account.</p>
+        </div>
+
+        <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <label style={{ fontSize: '14px', fontWeight: '600', color: '#334155' }}>Username</label>
+            <input 
+              name="username"
+              type="text" 
+              placeholder="Ex: POWERPAX01" 
+              required 
+              style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '15px' }}
             />
           </div>
-          <h1>PowerPax India</h1>
-          <p className="subtitle">Exhibitor Portal</p>
-        </div>
-        
-        <form onSubmit={handleLogin} className="login-form">
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <label style={{ fontSize: '14px', fontWeight: '600', color: '#334155' }}>Password</label>
+            <input 
+              name="password"
+              type="password" 
+              placeholder="••••••••" 
+              required 
+              style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '15px' }}
+            />
+          </div>
+
           {errorMsg && (
-            <div className="error-message" style={{ color: 'var(--status-rejected, #ff4757)', background: 'rgba(255, 71, 87, 0.1)', padding: '10px', borderRadius: '8px', marginBottom: '15px', fontSize: '0.9rem', textAlign: 'center' }}>
+            <div style={{ padding: '10px', background: '#fee2e2', color: '#991b1b', borderRadius: '6px', fontSize: '13px', textAlign: 'center' }}>
               {errorMsg}
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <div className="input-container">
-              <i className="fas fa-user"></i>
-              <input 
-                type="text" 
-                id="username" 
-                placeholder="Enter your username" 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required 
-              />
-            </div>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="input-container">
-              <i className="fas fa-lock"></i>
-              <input 
-                type={showPassword ? "text" : "password"} 
-                id="password" 
-                placeholder="••••••••" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required 
-              />
-              <button 
-                type="button" 
-                className="toggle-password"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-              </button>
-            </div>
-          </div>
-          
-          <div className="form-footer">
-            <label className="remember-me">
-              <input type="checkbox" /> <span>Keep me logged in</span>
-            </label>
-            <a href="#" className="forgot-password">Forgot password?</a>
-          </div>
-          
           <button 
             type="submit" 
-            className="btn-login" 
-            disabled={isLoading || isSuccess}
-            style={isSuccess ? { backgroundColor: 'var(--success-green)' } : {}}
+            disabled={isLoading}
+            style={{ 
+              background: '#84cc16', 
+              color: '#fff', 
+              padding: '14px', 
+              borderRadius: '8px', 
+              border: 'none', 
+              fontSize: '16px', 
+              fontWeight: '700', 
+              cursor: 'pointer',
+              marginTop: '10px'
+            }}
           >
-            {isLoading ? (
-              <><i className="fas fa-circle-notch fa-spin"></i> Authenticating...</>
-            ) : isSuccess ? (
-              <><i className="fas fa-check"></i> Success!</>
-            ) : (
-              <>Login <i className="fas fa-arrow-right"></i></>
-            )}
+            {isLoading ? 'Verifying...' : 'Login to Portal'}
           </button>
         </form>
-        
-        <div className="card-footer">
-          <p>Need support? <a href="#">Contact Organizer</a></p>
+
+        <div style={{ marginTop: '30px', padding: '15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          <p style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#64748b', textAlign: 'center' }}>Secure Access Environment</p>
+          <p style={{ margin: 0, fontSize: '11px', color: '#94a3b8', textAlign: 'center' }}>Authorized usage only. All sessions are logged for security.</p>
         </div>
       </div>
-      
-      <footer className="portal-footer">
+
+      <footer style={{ position: 'absolute', bottom: '20px', width: '100%', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
         <p>&copy; 2026 PowerPax India. All rights reserved.</p>
+        <div style={{ marginTop: '5px', fontSize: '10px', color: '#94a3b8' }}>
+          Ultra-Resilience Mode Active | Static Assets Redirected
+        </div>
       </footer>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        body { margin: 0; padding: 0; }
+        input:focus { border-color: #84cc16 !important; outline: none !important; box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.2) !important; }
+      `}} />
     </div>
   );
 }
