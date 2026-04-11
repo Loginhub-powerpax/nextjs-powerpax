@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import FormListItem from '../../components/FormListItem';
 import ExhibitorManual from '../../components/ExhibitorManual';
 import Image from 'next/image';
