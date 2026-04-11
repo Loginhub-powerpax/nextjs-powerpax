@@ -45,7 +45,7 @@ export default function LoginPage() {
 
       <div className="login-card" style={{ background: '#fff', padding: '40px', borderRadius: '20px', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', width: '90%', maxWidth: '450px', position: 'relative', zIndex: 10, border: '1px solid #e0e0e0' }}>
         <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <img src="/powerpax_logo.gif" alt="PowerPax Logo" style={{ height: '65px', marginBottom: '20px' }} />
+          <img src="/logo.gif" alt="PowerPax Logo" style={{ height: '65px', marginBottom: '20px' }} />
           <h1 style={{ fontSize: '26px', fontWeight: '700', margin: '0 0 8px 0', color: '#2c3e50', letterSpacing: '-0.5px' }}>Exhibitor Portal</h1>
           <p style={{ margin: 0, color: '#666', fontSize: '15px' }}>Please login to access your dashboard</p>
         </div>
