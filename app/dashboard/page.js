@@ -29,6 +29,11 @@ export default function DashboardPage() {
     localStorage.removeItem('submittedForms');
     window.location.href = '/';
   };
+  const handlePrintLetter = async () => {
+    if (typeof window === 'undefined') return;
+
+    const submittedFormsStr = localStorage.getItem('submittedForms');
+    const submittedForms = submittedFormsStr ? JSON.parse(submittedFormsStr) : {};
 
     const exhibitorDataStr = localStorage.getItem('exhibitorData');
     const exhibitorData = exhibitorDataStr ? JSON.parse(exhibitorDataStr) : {};
