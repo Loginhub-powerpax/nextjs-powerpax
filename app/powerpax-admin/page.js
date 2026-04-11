@@ -25,7 +25,7 @@ export default function AdminPage() {
     }
   };
 
-  const handlePrintLetter = (forms) => {
+  const handlePrintLetter = async (forms) => {
     if (!forms || forms.length === 0) return;
     
     // Aggregate data from all forms to find relevant fields
@@ -41,25 +41,9 @@ export default function AdminPage() {
       created_at: latestSub.created_at
     };
 
-    const htmlContent = generateParticipationLetter(letterData);
-    
-    // Create a hidden iframe for printing
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-    
-    const frameDoc = iframe.contentWindow || iframe.contentDocument;
-    const doc = frameDoc.document || frameDoc;
-    
-    doc.open();
-    doc.write(htmlContent);
-    doc.close();
-
-    iframe.onload = () => {
-      iframe.contentWindow.print();
-      // Remove iframe after print dialog opens
-      setTimeout(() => document.body.removeChild(iframe), 1000);
-    };
+    // The new PDF-Lib integration automatically manages the download 
+    // and opens the PDF in a new tab using the official letterhead background!
+    await generateParticipationLetter(letterData);
   };
 
   const fetchSubmissions = async () => {
