@@ -187,14 +187,33 @@ export default function DashboardPage() {
                 </div>
 
                 <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Organiser Support</h3>
-                  <p style={{ fontSize: '15px', color: '#1e293b', fontWeight: 'bold', marginBottom: '5px' }}>PowerPax India Team</p>
-                  <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '15px' }}>General Enquiries & Technical Support</p>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
-                      <i className="fas fa-globe" style={{ color: '#84cc16' }}></i>
-                      <a href="http://www.powerpaxindia.com" target="_blank" style={{ color: '#1e293b', textDecoration: 'none' }}>www.powerpaxindia.com</a>
+                  <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Stall Booking</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', color: '#475569' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Neha Chauhan:</span>
+                      <strong style={{ color: '#1e293b' }}>+91 7428 693 331</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Gaurav Dubey:</span>
+                      <strong style={{ color: '#1e293b' }}>+91 98185 75520</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Hemant Chauhan:</span>
+                      <strong style={{ color: '#1e293b' }}>+91 99993 95282</strong>
+                    </div>
+                  </div>
+
+                  <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid #e2e8f0' }} />
+
+                  <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Conference & Sponsorship</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px', color: '#1e293b', fontWeight: 'bold' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <i className="fas fa-phone-alt" style={{ color: '#84cc16', fontSize: '12px' }}></i>
+                      <span>+91 7428 693 331</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <i className="fas fa-phone-alt" style={{ color: '#84cc16', fontSize: '12px' }}></i>
+                      <span>+91 98185 75520</span>
                     </div>
                   </div>
                 </div>
