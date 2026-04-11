@@ -19,19 +19,44 @@ const INITIAL_MANDATORY_FORMS = [
 export default function DashboardPage() {
   const [mandatoryForms, setMandatoryForms] = useState(INITIAL_MANDATORY_FORMS);
   const [companyName, setCompanyName] = useState('Exhibitor Company');
+  const [stallNumber, setStallNumber] = useState('[Stall No.]');
+  const [hallNumber, setHallNumber] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'letter', 'manual', 'contact'
 
   const handleLogout = () => {
     localStorage.removeItem('companyName');
+    localStorage.removeItem('exhibitorData');
     localStorage.removeItem('submittedForms');
     window.location.href = '/';
   };
 
-  const handlePrintLetter = async () => {
-    // We generate the letter based on the current company name
+    const exhibitorDataStr = localStorage.getItem('exhibitorData');
+    const exhibitorData = exhibitorDataStr ? JSON.parse(exhibitorDataStr) : {};
+    
+    // Extract data from Form 1 (F01) if available
+    const f01Data = submittedForms['F01'] || {};
+    
+    // Official assignment from backend/sheet
+    const officialStall = exhibitorData['Stall number'] || exhibitorData['stallNumber'];
+    const officialHall = exhibitorData['Hall number'] || exhibitorData['hallNumber'];
+
+    // Fallback logic for Stand Number
+    const finalStandNumber = officialStall 
+                     || submittedForms['F02']?.standNumber 
+                     || submittedForms['F04']?.standNumber 
+                     || submittedForms['F06']?.standNumber 
+                     || standNumber;
+
     const letterData = {
       auth_company_name: companyName,
-      company_name: companyName,
+      company_name: f01Data.companyName || companyName,
+      contactPerson: f01Data.contactPerson || '',
+      address: f01Data.address || '',
+      country: f01Data.country || '',
+      mobile: f01Data.mobile || '',
+      email: f01Data.email || '',
+      standNumber: finalStandNumber,
+      hallNumber: officialHall || '',
       created_at: new Date().toISOString()
     };
 
@@ -44,6 +69,13 @@ export default function DashboardPage() {
       const storedName = localStorage.getItem('companyName');
       if (storedName) {
         setCompanyName(storedName);
+      }
+
+      const exhibitorDataStr = localStorage.getItem('exhibitorData');
+      if (exhibitorDataStr) {
+        const data = JSON.parse(exhibitorDataStr);
+        if (data['Stall number'] || data['stallNumber']) setStallNumber(data['Stall number'] || data['stallNumber']);
+        if (data['Hall number'] || data['hallNumber']) setHallNumber(data['Hall number'] || data['hallNumber']);
       }
 
       const submittedFormsStr = localStorage.getItem('submittedForms');
@@ -133,9 +165,11 @@ export default function DashboardPage() {
                   <p style={{ fontSize: '12px', color: '#84cc16' }}>Mandatory forms completed</p>
                 </div>
                 <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', cursor: 'pointer' }} onClick={() => setActiveTab('forms')}>
-                  <h4 style={{ color: '#64748b', fontSize: '14px', marginBottom: '10px' }}>Next Deadline</h4>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444' }}>29 Apr 2026</div>
-                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>All mandatory forms due by this date</p>
+                  <h4 style={{ color: '#64748b', fontSize: '14px', marginBottom: '10px' }}>Your Assignment</h4>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af' }}>
+                    Stall: {stallNumber} {hallNumber ? `| Hall: ${hallNumber}` : ''}
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>Confirmed via organizer data</p>
                 </div>
               </div>
 
@@ -162,22 +196,44 @@ export default function DashboardPage() {
           {activeTab === 'letter' && (
             <section>
               <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Participation Letter</h1>
-              <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                <div style={{ fontSize: '50px', color: '#84cc16', marginBottom: '20px' }}>
-                  <i className="fas fa-file-certificate"></i>
+              
+              {!mandatoryForms.find(f => f.id === 'F01')?.status === 'Complete' && localStorage.getItem('submittedForms') && !JSON.parse(localStorage.getItem('submittedForms'))['F01'] ? (
+                <div style={{ background: '#fff', padding: '60px 40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                  <div style={{ fontSize: '50px', color: '#94a3b8', marginBottom: '20px' }}>
+                    <i className="fas fa-lock"></i>
+                  </div>
+                  <h2 style={{ fontSize: '22px', marginBottom: '15px', color: '#475569' }}>Letter Locked</h2>
+                  <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
+                    Your official Participation Letter will be available for download once you have completed <strong>Form 1: Show Directory (Company Profile & Product Index)</strong>.
+                  </p>
+                  <button 
+                    onClick={() => {
+                        window.location.href = '/forms/F01';
+                    }}
+                    className="btn-save" 
+                    style={{ background: '#84cc16', padding: '12px 25px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
+                  >
+                    Go to Form 1
+                  </button>
                 </div>
-                <h2 style={{ fontSize: '22px', marginBottom: '15px' }}>Download Your Certificate</h2>
-                <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
-                  Congratulations on your participation in the PowerPax India Renewable Energy Expo! Click the button below to generate and download your official branded participation letter.
-                </p>
-                <button 
-                  onClick={handlePrintLetter}
-                  className="btn-save" 
-                  style={{ background: '#1e40af', padding: '15px 30px', fontSize: '16px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
-                >
-                  <i className="fas fa-download"></i> Download Participation Letter
-                </button>
-              </div>
+              ) : (
+                <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                  <div style={{ fontSize: '50px', color: '#84cc16', marginBottom: '20px' }}>
+                    <i className="fas fa-file-certificate"></i>
+                  </div>
+                  <h2 style={{ fontSize: '22px', marginBottom: '15px' }}>Download Your Certificate</h2>
+                  <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
+                    Congratulations on your participation in the PowerPax India Renewable Energy Expo! Click the button below to generate and download your official branded participation letter.
+                  </p>
+                  <button 
+                    onClick={handlePrintLetter}
+                    className="btn-save" 
+                    style={{ background: '#1e40af', padding: '15px 30px', fontSize: '16px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
+                  >
+                    <i className="fas fa-download"></i> Download Participation Letter
+                  </button>
+                </div>
+              )}
 
               <div style={{ marginTop: '40px', background: '#f8fafc', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                 <p style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '15px' }}>Quick Access QR Code</p>
@@ -234,7 +290,7 @@ export default function DashboardPage() {
         </div>
 
         <footer style={{ marginTop: 'auto', textAlign: 'center', padding: '20px', fontSize: '12px', color: '#94a3b8', borderTop: '1px solid #e2e8f0', background: '#fff' }}>
-          <p>Copyright © PowerPax India 2026 | Safe Mode Active</p>
+          <p>Copyright © PowerPax India 2026</p>
         </footer>
       </main>
     </div>
