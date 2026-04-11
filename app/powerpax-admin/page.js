@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { generateParticipationLetter } from '../../lib/LetterTemplate';
 
 export default function AdminPage() {
   const [submissions, setSubmissions] = useState([]);
@@ -22,6 +23,26 @@ export default function AdminPage() {
     } else {
       alert("Invalid Admin Password");
     }
+  };
+
+  const handlePrintLetter = async (forms) => {
+    if (!forms || forms.length === 0) return;
+    
+    // Aggregate data from all forms to find relevant fields
+    const aggregatedData = forms.reduce((acc, f) => ({ ...acc, ...f.all_data }), {});
+    
+    // Find the latest metadata
+    const latestSub = forms.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0];
+    
+    // Make sure we have the company names
+    const letterData = {
+      ...aggregatedData,
+      auth_company_name: latestSub.auth_company_name || latestSub.company_name || latestSub.username,
+      company_name: latestSub.company_name || latestSub.username,
+      created_at: latestSub.created_at
+    };
+
+    await generateParticipationLetter(letterData);
   };
 
   const fetchSubmissions = async () => {
@@ -244,7 +265,14 @@ export default function AdminPage() {
               </div>
             ))}
             
-            <div className="mt-40" style={{textAlign: 'right'}}>
+            <div className="mt-40" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <button 
+                className="btn-save" 
+                onClick={() => handlePrintLetter(selectedCompanyForms)}
+                style={{background: '#1e40af', padding: '10px 20px', display: 'flex', gap: '8px', alignItems: 'center'}}
+              >
+                <i className="fas fa-file-pdf"></i> Generate Participation Letter
+              </button>
               <button className="btn-gray" onClick={() => setSelectedCompanyForms(null)}>Close View</button>
             </div>
           </div>
