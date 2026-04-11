@@ -13,7 +13,7 @@ export const metadata = {
   },
   // Added unique version to force cache bypass on hosting providers
   other: {
-    "build-version": "1.0.8-stable-force-refresh"
+    "build-version": "1.0.9-stable"
   }
 };
 
