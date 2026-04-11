@@ -115,9 +115,13 @@ export default function DashboardPage() {
     <div className="dashboard-wrapper" style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc' }}>
       {/* Sidebar */}
       <aside className="sidebar" style={{ width: '280px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', padding: '25px', position: 'fixed', height: '100vh' }}>
-        <div className="sidebar-logo" style={{ marginBottom: '40px' }}>
-          <h2 style={{ fontSize: '20px', color: '#1e293b', margin: 0 }}>PowerPax India</h2>
-          <p style={{ fontSize: '12px', color: '#84cc16', fontWeight: 'bold', margin: 0 }}>Exhibitor Portal</p>
+        <div className="sidebar-logo" style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <img 
+            src="/logo.gif" 
+            alt="PowerPax India" 
+            style={{ width: '160px', height: 'auto', marginBottom: '5px' }}
+          />
+          <p style={{ fontSize: '12px', color: '#84cc16', fontWeight: 'bold', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>Exhibitor Portal</p>
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
@@ -152,7 +156,6 @@ export default function DashboardPage() {
             <span>Welcome, <strong>{companyName}</strong></span>
           </div>
           <div className="header-right" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <Link href="/powerpax-admin" style={{ fontSize: '11px', color: '#94a3b8', textDecoration: 'none' }}>Admin Access</Link>
             <i className="fas fa-user-circle" style={{ fontSize: '24px', color: '#64748b' }}></i>
           </div>
         </header>
@@ -174,7 +177,6 @@ export default function DashboardPage() {
                   <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af' }}>
                     Stall: {stallNumber} {hallNumber ? `| Hall: ${hallNumber}` : ''}
                   </div>
-                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>Confirmed via organizer data</p>
                 </div>
               </div>
 
