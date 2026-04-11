@@ -84,54 +84,56 @@ export default function FormDetailPage({ params }) {
       const storedExhibitor = localStorage.getItem('exhibitorData');
       
       if (storedExhibitor) {
-        const data = JSON.parse(storedExhibitor);
-        setExhibitorData(data);
-        if (data.company_name) {
-          setAuthCompanyName(data.company_name);
-          setNewBadge(prev => ({ ...prev, companyName: data.company_name }));
-        }
-        if (data.username) setAuthUsername(data.username);
-        // Master data is NOT pre-filled into forms anymore to respect the "only what I filled" request
+        try {
+          const data = JSON.parse(storedExhibitor);
+          setExhibitorData(data);
+          if (data.company_name) {
+            setAuthCompanyName(data.company_name);
+            setNewBadge(prev => ({ ...prev, company_name: data.company_name }));
+          }
+          if (data.username) setAuthUsername(data.username);
+        } catch(e) { console.error("Bad auth data"); localStorage.removeItem('exhibitorData'); }
       } else if (storedName) {
         setAuthCompanyName(storedName);
-        setNewBadge(prev => ({ ...prev, companyName: storedName }));
+        setNewBadge(prev => ({ ...prev, company_name: storedName }));
       }
 
       const stored = localStorage.getItem('submittedForms');
       if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed[formId]) {
-          setIsComplete(true);
-          const data = parsed[formId];
-          if (data.companyName) setCompanyName(data.companyName);
-          if (data.contactPerson) setContactPerson(data.contactPerson);
-          if (data.address) setAddress(data.address);
-          if (data.country) setCountry(data.country);
-          if (data.tel) setTel(data.tel);
-          if (data.fax) setFax(data.fax);
-          if (data.email) setEmail(data.email);
-          if (data.website) setWebsite(data.website);
-          if (data.mobile) setMobile(data.mobile);
-          if (data.description) setDescription(data.description);
-          if (data.productCategory) setProductCategory(data.productCategory);
-          if (data.logoPreview) setLogoPreview(data.logoPreview);
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed[formId]) {
+            setIsComplete(true);
+            const data = parsed[formId];
+            if (data.companyName) setCompanyName(data.companyName);
+            if (data.contactPerson) setContactPerson(data.contactPerson);
+            if (data.address) setAddress(data.address);
+            if (data.country) setCountry(data.country);
+            if (data.tel) setTel(data.tel);
+            if (data.fax) setFax(data.fax);
+            if (data.email) setEmail(data.email);
+            if (data.website) setWebsite(data.website);
+            if (data.mobile) setMobile(data.mobile);
+            if (data.description) setDescription(data.description);
+            if (data.productCategory) setProductCategory(data.productCategory);
+            if (data.logoPreview) setLogoPreview(data.logoPreview);
 
-          if (data.badges) setBadges(data.badges);
-          
-          if (data.fasciaName) setFasciaName(data.fasciaName);
-          if (data.standNumber) setStandNumber(data.standNumber);
-          if (data.hallNumber) setHallNumber(data.hallNumber);
-          if (data.standType) setStandType(data.standType);
-          if (data.standSize) setStandSize(data.standSize);
-          if (data.openSide) setOpenSide(data.openSide);
-          if (data.customFascia) setCustomFascia(data.customFascia);
-          if (data.dateField) setDateField(data.dateField);
+            if (data.badges) setBadges(data.badges);
+            
+            if (data.fasciaName) setFasciaName(data.fasciaName);
+            if (data.standNumber) setStandNumber(data.standNumber);
+            if (data.hallNumber) setHallNumber(data.hallNumber);
+            if (data.standType) setStandType(data.standType);
+            if (data.standSize) setStandSize(data.standSize);
+            if (data.openSide) setOpenSide(data.openSide);
+            if (data.customFascia) setCustomFascia(data.customFascia);
+            if (data.dateField) setDateField(data.dateField);
 
-          if (data.furnitureOrders) setFurnitureOrders(data.furnitureOrders);
-          if (data.electricityItem) setElectricityItem(data.electricityItem);
-          if (data.wifiItem) setWifiItem(data.wifiItem);
-
-        }
+            if (data.furnitureOrders) setFurnitureOrders(data.furnitureOrders);
+            if (data.electricityItem) setElectricityItem(data.electricityItem);
+            if (data.wifiItem) setWifiItem(data.wifiItem);
+          }
+        } catch(e) { console.error("Bad form data"); localStorage.removeItem('submittedForms'); }
       }
     }
   }, [formId]);

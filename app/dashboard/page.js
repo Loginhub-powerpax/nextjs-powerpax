@@ -29,11 +29,15 @@ export default function DashboardPage() {
 
       const submittedFormsStr = localStorage.getItem('submittedForms');
       if (submittedFormsStr) {
-        const submittedForms = JSON.parse(submittedFormsStr);
-        
-        setMandatoryForms(prev => prev.map(f => 
-          submittedForms[f.id] ? { ...f, status: 'Complete' } : f
-        ));
+        try {
+          const submittedForms = JSON.parse(submittedFormsStr);
+          setMandatoryForms(prev => prev.map(f => 
+            submittedForms[f.id] ? { ...f, status: 'Complete' } : f
+          ));
+        } catch (err) {
+          console.error("Corrupted local storage data for forms:", err);
+          localStorage.removeItem('submittedForms'); // Clean up bad data
+        }
       }
     }
   }, []);
@@ -76,15 +80,16 @@ export default function DashboardPage() {
             </div>
 
             <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap' }}>
-              <div style={{ flex: '1 1 65%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+               <div style={{ flex: '1 1 65%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                  <h4 style={{ color: '#ea580c', fontSize: '13px', textTransform: 'uppercase', marginBottom: '15px' }}>IMPORTANT INFORMATION:</h4>
+                 <ul style={{ paddingLeft: '20px', fontSize: '12px' }}>
                    <li style={{ color: '#ef4444', marginBottom: '5px' }}>Any onsite changes in Fascia name submitted will be charged at Rs. 2000/- per request.</li>
                    <li style={{ color: '#ef4444', marginBottom: '5px' }}>No outside Food & Beverage is allowed inside the venue premises.</li>
                    <li style={{ marginBottom: '5px' }}><strong>Visitors / Exhibitors must present a valid, current government-issued photo ID</strong> proving their identity at any entry point, as requested by the organiser or its assigned staff.</li>
                    <li style={{ marginBottom: '5px' }}>All packing materials like wraps, carton boxes etc. must be neatly collected and kept at the corner of your stand for the housekeeping staff to clear it. Failure to do so or littering the carpeted flooring / aisles, especially during the show opening hours will result in a penalty of Rs. 5,000/- per incident, being levied.</li>
                    <li>Dispose of empty cartons, boxes, ladders, and any waste properly. Store materials within the stand or off-site. Contact the freight forwarder for storage (if available), with charges paid by the exhibitor/contractor. Excess items cannot be stored in pathways or behind stands/panels.</li>
                  </ul>
-              </div>
+               </div>
 
               <div style={{ flex: '1 1 30%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'left', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                  <p style={{ fontSize: '14px', color: '#0f172a', marginBottom: '20px' }}>Scan below QR code to access<br/>Exhibitor Manual on your<br/>mobile</p>
