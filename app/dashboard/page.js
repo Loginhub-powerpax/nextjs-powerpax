@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FormListItem from '../../components/FormListItem';
 import ExhibitorManual from '../../components/ExhibitorManual';
+import { generateParticipationLetter } from '../../lib/LetterTemplate';
 import Image from 'next/image';
 
 const INITIAL_MANDATORY_FORMS = [
@@ -18,12 +19,23 @@ const INITIAL_MANDATORY_FORMS = [
 export default function DashboardPage() {
   const [mandatoryForms, setMandatoryForms] = useState(INITIAL_MANDATORY_FORMS);
   const [companyName, setCompanyName] = useState('Exhibitor Company');
-  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'forms', 'manual', 'contact'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'letter', 'manual', 'contact'
 
   const handleLogout = () => {
     localStorage.removeItem('companyName');
     localStorage.removeItem('submittedForms');
     window.location.href = '/';
+  };
+
+  const handlePrintLetter = async () => {
+    // We generate the letter based on the current company name
+    const letterData = {
+      auth_company_name: companyName,
+      company_name: companyName,
+      created_at: new Date().toISOString()
+    };
+
+    await generateParticipationLetter(letterData);
   };
 
   useEffect(() => {
@@ -75,8 +87,8 @@ export default function DashboardPage() {
           <button onClick={() => setActiveTab('dashboard')} style={navItemStyle('dashboard')}>
             <i className="fas fa-th-large"></i> Dashboard
           </button>
-          <button onClick={() => setActiveTab('forms')} style={navItemStyle('forms')}>
-            <i className="fas fa-file-alt"></i> My Forms
+          <button onClick={() => setActiveTab('letter')} style={navItemStyle('letter')}>
+            <i className="fas fa-file-pdf"></i> Participation Letter
           </button>
           <button onClick={() => setActiveTab('manual')} style={navItemStyle('manual')}>
             <i className="fas fa-info-circle"></i> Exhibitor Manual
@@ -135,20 +147,36 @@ export default function DashboardPage() {
                    <li>Strict adherence to dismantling times is mandatory on 3rd May evening.</li>
                  </ul>
               </div>
+
+              <div className="form-group-section" style={{ marginTop: '40px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#475569', marginBottom: '15px', textTransform: 'uppercase' }}>Mandatory forms</h3>
+                <div className="form-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {mandatoryForms.map(form => (
+                    <FormListItem key={form.id} {...form} />
+                  ))}
+                </div>
+              </div>
             </section>
           )}
 
-          {activeTab === 'forms' && (
-            <section className="dashboard-section">
-              <div style={{ marginBottom: '25px' }}>
-                <h2 style={{ fontSize: '20px', margin: 0 }}>Mandatory Forms</h2>
-                <p style={{ fontSize: '13px', color: '#64748b' }}>Complete all forms below to ensure your stall compliance.</p>
-              </div>
-
-              <div className="form-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {mandatoryForms.map(form => (
-                  <FormListItem key={form.id} {...form} />
-                ))}
+          {activeTab === 'letter' && (
+            <section>
+              <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Participation Letter</h1>
+              <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                <div style={{ fontSize: '50px', color: '#84cc16', marginBottom: '20px' }}>
+                  <i className="fas fa-file-certificate"></i>
+                </div>
+                <h2 style={{ fontSize: '22px', marginBottom: '15px' }}>Download Your Certificate</h2>
+                <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
+                  Congratulations on your participation in the PowerPax India Renewable Energy Expo! Click the button below to generate and download your official branded participation letter.
+                </p>
+                <button 
+                  onClick={handlePrintLetter}
+                  className="btn-save" 
+                  style={{ background: '#1e40af', padding: '15px 30px', fontSize: '16px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
+                >
+                  <i className="fas fa-download"></i> Download Participation Letter
+                </button>
               </div>
 
               <div style={{ marginTop: '40px', background: '#f8fafc', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
