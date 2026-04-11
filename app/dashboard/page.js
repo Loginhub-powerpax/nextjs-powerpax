@@ -204,43 +204,53 @@ export default function DashboardPage() {
             <section>
               <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Participation Letter</h1>
               
-              {mandatoryForms.find(f => f.id === 'F01')?.status !== 'Complete' && localStorage.getItem('submittedForms') && !JSON.parse(localStorage.getItem('submittedForms'))['F01'] ? (
-                <div style={{ background: '#fff', padding: '60px 40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
-                  <div style={{ fontSize: '50px', color: '#94a3b8', marginBottom: '20px' }}>
-                    <i className="fas fa-lock"></i>
+              {(() => {
+                const submittedStr = typeof window !== 'undefined' ? localStorage.getItem('submittedForms') : null;
+                const submitted = submittedStr ? JSON.parse(submittedStr) : {};
+                const isF01Complete = !!submitted['F01'];
+                
+                if (!isF01Complete) {
+                  return (
+                    <div style={{ background: '#fff', padding: '60px 40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                      <div style={{ fontSize: '50px', color: '#94a3b8', marginBottom: '20px' }}>
+                        <i className="fas fa-lock"></i>
+                      </div>
+                      <h2 style={{ fontSize: '22px', marginBottom: '15px', color: '#475569' }}>Letter Locked</h2>
+                      <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
+                        Your official Participation Letter will be available for download once you have completed <strong>Form 1: Show Directory (Company Profile & Product Index)</strong>.
+                      </p>
+                      <button 
+                        onClick={() => {
+                            window.location.href = '/forms/F01';
+                        }}
+                        className="btn-save" 
+                        style={{ background: '#84cc16', padding: '12px 25px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
+                      >
+                        Go to Form 1
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                    <div style={{ fontSize: '50px', color: '#84cc16', marginBottom: '20px' }}>
+                      <i className="fas fa-file-certificate"></i>
+                    </div>
+                    <h2 style={{ fontSize: '22px', marginBottom: '15px' }}>Download Your Certificate</h2>
+                    <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
+                      Congratulations on your participation in the PowerPax India Renewable Energy Expo! Click the button below to generate and download your official branded participation letter.
+                    </p>
+                    <button 
+                      onClick={handlePrintLetter}
+                      className="btn-save" 
+                      style={{ background: '#1e40af', padding: '15px 30px', fontSize: '16px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
+                    >
+                      <i className="fas fa-download"></i> Download Participation Letter
+                    </button>
                   </div>
-                  <h2 style={{ fontSize: '22px', marginBottom: '15px', color: '#475569' }}>Letter Locked</h2>
-                  <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
-                    Your official Participation Letter will be available for download once you have completed <strong>Form 1: Show Directory (Company Profile & Product Index)</strong>.
-                  </p>
-                  <button 
-                    onClick={() => {
-                        window.location.href = '/forms/F01';
-                    }}
-                    className="btn-save" 
-                    style={{ background: '#84cc16', padding: '12px 25px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
-                  >
-                    Go to Form 1
-                  </button>
-                </div>
-              ) : (
-                <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                  <div style={{ fontSize: '50px', color: '#84cc16', marginBottom: '20px' }}>
-                    <i className="fas fa-file-certificate"></i>
-                  </div>
-                  <h2 style={{ fontSize: '22px', marginBottom: '15px' }}>Download Your Certificate</h2>
-                  <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 30px' }}>
-                    Congratulations on your participation in the PowerPax India Renewable Energy Expo! Click the button below to generate and download your official branded participation letter.
-                  </p>
-                  <button 
-                    onClick={handlePrintLetter}
-                    className="btn-save" 
-                    style={{ background: '#1e40af', padding: '15px 30px', fontSize: '16px', display: 'inline-flex', gap: '10px', alignItems: 'center' }}
-                  >
-                    <i className="fas fa-download"></i> Download Participation Letter
-                  </button>
-                </div>
-              )}
+                );
+              })()}
 
               <div style={{ marginTop: '40px', background: '#f8fafc', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                 <p style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '15px' }}>Quick Access QR Code</p>
