@@ -1,14 +1,12 @@
 import Link from 'next/link';
 
-export default function FormListItem({ form }) {
-  const { id, title, status, deadline, type } = form || {};
-
-  const getStatusStyle = (s = '') => {
+export default function FormListItem({ id, title, status, deadline, type }) {
+  const getStatusStyle = (s) => {
     switch (s.toLowerCase()) {
-      case 'complete': return { background: '#e8f5e9', color: '#4CAF50', border: '1px solid #c8e6c9' };
-      case 'pending': return { background: '#fff3e0', color: '#FF9800', border: '1px solid #ffe0b2' };
-      case 'offline': return { background: '#f5f5f5', color: '#666', border: '1px solid #e0e0e0' };
-      default: return { background: '#f8fafc', color: '#333', border: '1px solid #e0e0e0' };
+      case 'complete': return { background: '#dcfce7', color: '#16a34a' };
+      case 'pending': return { background: '#fef9c3', color: '#a16207' };
+      case 'offline': return { background: '#e2e8f0', color: '#64748b' };
+      default: return { background: '#f1f5f9', color: '#475569' };
     }
   };
 
@@ -17,53 +15,48 @@ export default function FormListItem({ form }) {
       display: 'flex', 
       justifyContent: 'space-between', 
       alignItems: 'center', 
-      padding: '15px 25px', 
+      padding: '12px 20px', 
       background: '#fff', 
-      border: '1px solid #e0e0e0', 
-      borderRadius: '8px', 
+      border: '1px solid #e2e8f0', 
+      borderRadius: '10px', 
       textDecoration: 'none', 
-      color: '#333',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-      fontSize: '14px',
-      transition: 'all 0.2s ease-in-out'
+      color: '#1e293b',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+      fontSize: '14px'
     }}>
       <div className="form-info" style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ fontWeight: '600', color: '#2c3e50' }}>{id} - {title}</span>
+        <span style={{ fontWeight: '600' }}>{id} - {title}</span>
       </div>
-      <div className="form-actions" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <span className="badge-status" style={{ 
-          padding: '4px 12px', 
-          borderRadius: '4px', 
+      <div className="form-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <span style={{ 
+          padding: '4px 10px', 
+          borderRadius: '999px', 
           fontSize: '11px', 
           fontWeight: '700', 
           textTransform: 'uppercase',
           ...getStatusStyle(status)
         }}>{status}</span>
-        
         {deadline && (
-          <span className="badge-deadline" style={{ 
-            padding: '4px 12px', 
-            borderRadius: '4px', 
+          <span style={{ 
+            padding: '4px 10px', 
+            borderRadius: '999px', 
             fontSize: '11px', 
-            fontWeight: '700', 
-            background: '#fff', 
-            color: '#f44336',
-            border: '1px solid #f44336'
+            fontWeight: '600', 
+            background: '#fee2e2', 
+            color: '#991b1b' 
           }}>{deadline}</span>
         )}
-
-        <span className="badge-type" style={{ 
-          padding: '4px 12px', 
-          borderRadius: '4px', 
+        <span style={{ 
+          padding: '4px 10px', 
+          borderRadius: '999px', 
           fontSize: '11px', 
-          fontWeight: '700', 
-          background: type === 'Mandatory' ? '#FF9800' : '#333', 
-          color: '#fff' 
+          fontWeight: '600', 
+          background: type === 'Mandatory' ? '#ffedd5' : '#f1f5f9', 
+          color: type === 'Mandatory' ? '#9a3412' : '#475569' 
         }}>
           {type}
         </span>
-        
-        <i className="fas fa-chevron-right" style={{ color: '#FF9800', marginLeft: '10px', fontSize: '12px' }}></i>
+        <i className="fas fa-arrow-right" style={{ color: '#84cc16', marginLeft: '5px' }}></i>
       </div>
     </Link>
   );

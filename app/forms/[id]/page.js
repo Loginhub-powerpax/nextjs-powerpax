@@ -16,7 +16,7 @@ export default function FormDetailPage({ params }) {
   const unwrappedParams = use(params);
   const formId = unwrappedParams.id || 'F01';
   const formTitle = formTitles[formId] || 'Form Details';
-  const [isMounted, setIsMounted] = useState(false);
+
   const [isComplete, setIsComplete] = useState(false);
   const [authCompanyName, setAuthCompanyName] = useState("");
   const [authUsername, setAuthUsername] = useState("");
@@ -79,7 +79,6 @@ export default function FormDetailPage({ params }) {
   const [wifiItem, setWifiItem] = useState("");
 
   useEffect(() => {
-    setIsMounted(true);
     if (typeof window !== 'undefined') {
       const storedName = localStorage.getItem('companyName');
       const storedExhibitor = localStorage.getItem('exhibitorData');
@@ -90,15 +89,12 @@ export default function FormDetailPage({ params }) {
           setExhibitorData(data);
           if (data.company_name) {
             setAuthCompanyName(data.company_name);
-            setCompanyName(data.company_name);
             setNewBadge(prev => ({ ...prev, company_name: data.company_name }));
           }
-          if (data.email) setEmail(data.email);
           if (data.username) setAuthUsername(data.username);
         } catch(e) { console.error("Bad auth data"); localStorage.removeItem('exhibitorData'); }
       } else if (storedName) {
         setAuthCompanyName(storedName);
-        setCompanyName(storedName);
         setNewBadge(prev => ({ ...prev, company_name: storedName }));
       }
 
@@ -554,22 +550,22 @@ export default function FormDetailPage({ params }) {
 
   return (
     <div className="form-detail-wrapper" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', fontFamily: 'sans-serif' }}>
-      <header className="dashboard-header thin" style={{ background: '#fff', padding: '10px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e0e0e0' }}>
-        <div className="header-left"><span style={{ fontSize: '14px', color: '#666' }}>Welcome, <strong style={{color: '#FF9800'}}>{authCompanyName || 'Exhibitor'}</strong></span></div>
+      <header className="dashboard-header thin" style={{ background: '#fff', padding: '10px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #84cc16' }}>
+        <div className="header-left"><span style={{ fontSize: '14px' }}>Welcome, <strong style={{color: '#84cc16'}}>{authCompanyName}</strong></span></div>
         <div className="header-right"><i className="fas fa-user-circle" style={{ fontSize: '20px', color: '#64748b' }}></i></div>
       </header>
 
-      <div className="form-header-bar" style={{ background: '#2c3e50', color: '#fff', padding: '20px 0', borderBottom: '4px solid #FF9800' }}>
+      <div className="form-header-bar" style={{ background: '#0f172a', color: '#fff', padding: '20px 0' }}>
         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 30px' }}>
           <div className="header-bar-content" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <Link href="/dashboard" className="back-btn" style={{ color: '#fff', fontSize: '18px', textDecoration: 'none' }}><i className="fas fa-chevron-left"></i></Link>
-            <h1 style={{ fontSize: '20px', margin: 0, fontWeight: '700' }}>{formId} - {formTitle}</h1>
+            <h1 style={{ fontSize: '20px', margin: 0 }}>{formId} - {formTitle}</h1>
             <div className="header-badges" style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
               {isComplete ? 
-                <span className="badge status-complete" style={{ background: '#e8f5e9', color: '#4CAF50', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #c8e6c9' }}>Complete</span> : 
-                <span className="badge status-pending" style={{ background: '#fff3e0', color: '#FF9800', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #ffe0b2' }}>Pending</span>
+                <span className="badge status-complete" style={{ background: '#dcfce7', color: '#16a34a', padding: '4px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' }}>Complete</span> : 
+                <span className="badge status-pending" style={{ background: '#fef9c3', color: '#a16207', padding: '4px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' }}>Pending</span>
               }
-              <span className="badge badge-deadline" style={{ background: '#fff', color: '#f44336', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f44336' }}>Deadline: 29 Apr 2026</span>
+              <span className="badge badge-deadline" style={{ background: '#fee2e2', color: '#991b1b', padding: '4px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' }}>Deadline: 29 Apr 2026</span>
             </div>
           </div>
         </div>
@@ -584,31 +580,35 @@ export default function FormDetailPage({ params }) {
             marginBottom: '30px' 
           }}>
             
-            {/* Left Box: Company Information */}
-            <div className="header-box" style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '25px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-              <h3 style={{ fontSize: '14px', marginBottom: '20px', color: '#666', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>Company Information</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(130px, auto) 1fr', gap: '12px', fontSize: '13px', lineHeight: '1.4' }}>
-                <strong style={{ color: '#333' }}>Company name:</strong><span style={{ color: '#666' }}>{companyName || authCompanyName}</span>
-                <strong style={{ color: '#333' }}>Contact Person:</strong><span style={{ color: '#666' }}>{contactPerson || '-'}</span>
-                <strong style={{ color: '#333' }}>Email:</strong><span style={{ color: '#666' }}>{email || '-'}</span>
-                <strong style={{ color: '#333' }}>Mobile no:</strong><span style={{ color: '#666' }}>{mobile || '-'}</span>
-                <strong style={{ color: '#333' }}>Address:</strong><span style={{ color: '#666' }}>{address || '-'}</span>
+            {/* Left Box: Company detail */}
+            {(companyName || contactPerson || address || mobile) && (
+              <div className="header-box" style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#0f172a', textTransform: 'uppercase', fontWeight: 'bold' }}>Company Information</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, auto) 1fr', gap: '10px', fontSize: '13px', lineHeight: '1.4' }}>
+                  <strong style={{ color: '#64748b' }}>Company name:</strong><span style={{ color: '#1e293b' }}>{companyName || authCompanyName}</span>
+                  <strong style={{ color: '#64748b' }}>Contact Person:</strong><span style={{ color: '#1e293b' }}>{contactPerson || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Email:</strong><span style={{ color: '#1e293b' }}>{email || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Mobile no:</strong><span style={{ color: '#1e293b' }}>{mobile || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Address:</strong><span style={{ color: '#1e293b' }}>{address || '-'}</span>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Right Box: Stand Allocation */}
-            <div className="header-box" style={{ flex: '1 1 350px', background: '#fff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '25px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-              <h3 style={{ fontSize: '14px', marginBottom: '20px', color: '#666', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>Stand Allocation</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '90px 1fr 80px 1fr', gap: '12px 15px', fontSize: '13px', lineHeight: '1.4' }}>
-                <strong style={{ color: '#333' }}>Stand:</strong><span style={{ color: '#666' }}>{standNumber || '-'}</span>
-                <strong style={{ color: '#333' }}>Hall:</strong><span style={{ color: '#666' }}>{hallNumber || '-'}</span>
-                <strong style={{ color: '#333' }}>Type:</strong><span style={{ color: '#666' }}>{standType || '-'}</span>
-                <strong style={{ color: '#333' }}>Size:</strong><span style={{ color: '#666' }}>{standSize || '-'}</span>
+            {/* Right Box: Exhibitor Stand Detail */}
+            {(standNumber || hallNumber || standType) && (
+              <div className="header-box" style={{ flex: '1 1 350px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#0f172a', textTransform: 'uppercase', fontWeight: 'bold' }}>Stand Allocation</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 70px 1fr', gap: '10px 15px', fontSize: '13px', lineHeight: '1.4' }}>
+                  <strong style={{ color: '#64748b' }}>Stand:</strong><span style={{ color: '#1e293b' }}>{standNumber || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Hall:</strong><span style={{ color: '#1e293b' }}>{hallNumber || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Type:</strong><span style={{ color: '#1e293b' }}>{standType || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Size:</strong><span style={{ color: '#1e293b' }}>{standSize || '-'}</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          <div className="card" style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '30px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
             {formId === 'F01' ? renderF01Form() : null}
             {formId === 'F02' ? renderF02Form() : null}
             {formId === 'F03' ? (isAddingBadge ? renderF03AddBadge() : renderF03List()) : null}
@@ -619,8 +619,8 @@ export default function FormDetailPage({ params }) {
         </div>
       </main>
 
-      <footer className="dashboard-footer" style={{ textAlign: 'center', padding: '30px 0', fontSize: '12px', color: '#999', borderTop: '1px solid #e0e0e0', background: '#fff' }}>
-        <p>Copyright &copy; 2026 PowerPax India. All rights reserved.</p>
+      <footer className="dashboard-footer" style={{ textAlign: 'center', padding: '20px', fontSize: '12px', color: '#94a3b8', borderTop: '1px solid #e2e8f0', background: '#fff' }}>
+        <p>Copyright © PowerPax India 2026 | Ultra-Resilience Mode</p>
       </footer>
     </div>
   );
