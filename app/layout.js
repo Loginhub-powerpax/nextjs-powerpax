@@ -6,6 +6,15 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "PowerPax India | Exhibitor Portal",
   description: "Secure login for the PowerPax India Exhibitor Portal. Manage your event forms, badges, and company profile.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+  metadataBase: new URL('https://powerpax.tresubmedia.com'),
+  alternates: {
+    canonical: '/',
+  },
+  // Added unique version to force cache bypass on hosting providers
+  other: {
+    "build-version": "1.0.8-stable-force-refresh"
+  }
 };
 
 export default function RootLayout({ children }) {
