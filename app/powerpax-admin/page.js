@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { generateParticipationLetter } from '../../lib/LetterTemplate';
 
 export default function AdminPage() {
   const [submissions, setSubmissions] = useState([]);
@@ -22,6 +23,43 @@ export default function AdminPage() {
     } else {
       alert("Invalid Admin Password");
     }
+  };
+
+  const handlePrintLetter = (forms) => {
+    if (!forms || forms.length === 0) return;
+    
+    // Aggregate data from all forms to find relevant fields
+    const aggregatedData = forms.reduce((acc, f) => ({ ...acc, ...f.all_data }), {});
+    
+    // Find the latest metadata
+    const latestSub = forms.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0];
+    
+    const letterData = {
+      ...aggregatedData,
+      auth_company_name: latestSub.auth_company_name,
+      company_name: latestSub.company_name,
+      created_at: latestSub.created_at
+    };
+
+    const htmlContent = generateParticipationLetter(letterData);
+    
+    // Create a hidden iframe for printing
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    
+    const frameDoc = iframe.contentWindow || iframe.contentDocument;
+    const doc = frameDoc.document || frameDoc;
+    
+    doc.open();
+    doc.write(htmlContent);
+    doc.close();
+
+    iframe.onload = () => {
+      iframe.contentWindow.print();
+      // Remove iframe after print dialog opens
+      setTimeout(() => document.body.removeChild(iframe), 1000);
+    };
   };
 
   const fetchSubmissions = async () => {
@@ -72,9 +110,10 @@ export default function AdminPage() {
     );
   }
 
-  // Group submissions by Username (or Company Name as fallback)
+  // Group submissions by Company Name for consistency
   const groupedSubmissions = submissions.reduce((acc, sub) => {
-    const key = sub.username && sub.username !== 'Unknown' ? sub.username : sub.company_name;
+    // Priority: auth_company_name -> company_name -> username
+    const key = (sub.auth_company_name || sub.company_name || sub.username || 'Unknown').trim();
     if (!acc[key]) acc[key] = [];
     acc[key].push(sub);
     return acc;
@@ -129,7 +168,7 @@ export default function AdminPage() {
                       <tr key={key} style={{borderBottom: '1px solid #f9f9f9'}}>
                         <td style={{padding: '12px', whiteSpace: 'nowrap'}}>{new Date(recentSub.created_at).toLocaleString()}</td>
                         <td style={{padding: '12px'}}>
-                          <div style={{fontWeight: 'bold', color: '#1a1a1a'}}>{recentSub.auth_company_name || recentSub.company_name}</div>
+                          <div style={{fontWeight: 'bold', color: '#1a1a1a'}}>{recentSub.auth_company_name || recentSub.company_name || recentSub.username}</div>
                           <div style={{fontSize: '11px', color: '#64748b'}}>User: {key}</div>
                         </td>
                         <td style={{padding: '12px'}}>
@@ -177,11 +216,18 @@ export default function AdminPage() {
               style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '20px' }}>
               &times;
             </button>
+            <div className="modal-content" style={{maxWidth: '800px', width: '90%'}}>
+            <h2 style={{marginTop: 0, marginBottom: '5px'}}>{selectedCompanyForms[0].auth_company_name || selectedCompanyForms[0].company_name}</h2>
+            <p className="note">{Object.keys(selectedCompanyForms.reduce((acc, f) => ({...acc, [f.form_id]: true}), {})).length} Forms filled</p>
             
-            <h2 style={{marginTop: 0, marginBottom: '5px'}}>{selectedCompanyForms[0].company_name}</h2>
-            <p className="note">{selectedCompanyForms.length} Forms submitted</p>
-            
-            {selectedCompanyForms.map(sub => (
+            {/* Sort and Filter: only show the latest submission for each unique form_id */}
+            {Object.values(selectedCompanyForms.reduce((acc, sub) => {
+              // Keep only the most recent submission for each form_id
+              if (!acc[sub.form_id] || new Date(sub.created_at) > new Date(acc[sub.form_id].created_at)) {
+                acc[sub.form_id] = sub;
+              }
+              return acc;
+            }, {})).sort((a,b) => a.form_id.localeCompare(b.form_id)).map(sub => (
               <div key={sub.id} style={{marginTop: '20px', border: '1px solid #e2e8f0', background: '#f8fafc', padding: '20px', borderRadius: '8px'}}>
                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -194,18 +240,25 @@ export default function AdminPage() {
                  <hr style={{margin: '15px 0', border: '0', borderTop: '1px solid #e2e8f0'}} />
 
                  <div className="summary-list" style={{ marginTop: '0' }}>
-                  {Object.entries(sub.all_data).map(([key, value]) => {
-                    if (key === 'logoPreview' && value) {
+                   {Object.entries(sub.all_data).map(([key, value]) => {
+                    // Filter out redundant fields
+                    const skippedKeys = ['companyName', 'formId', 'username', 'authCompanyName', 'timestamp', 'id', 'terms', 'urn', 'status'];
+                    if (skippedKeys.includes(key) || !value) return null;
+
+                    if (key === 'logoPreview') {
                       return (
                         <div key={key} className="summary-row">
-                          <strong>{key}</strong>
-                          <span>
+                          <strong>Company Logo</strong>
+                          <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
                             <img src={value} alt="Exhibitor Logo" style={{maxHeight: '100px', border: '1px solid #ddd', padding: '5px', background: '#fff'}} />
-                          </span>
+                            <a href={value} download={`logo_${sub.auth_company_name || 'exhibitor'}.png`} style={{fontSize: '12px', color: '#84cc16', textDecoration: 'underline'}}>Download Image</a>
+                          </div>
                         </div>
                       );
                     }
+
                     if (key === 'badges' && Array.isArray(value)) {
+                      if (value.length === 0) return null; // Hide if empty
                       return (
                         <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
                           <strong>Employee Badges ({value.length})</strong>
@@ -215,16 +268,15 @@ export default function AdminPage() {
                         </div>
                       );
                     }
-                    if (key === 'furnitureOrders' && value) {
-                      const orderedItems = Object.entries(value).filter(([_, item]) => item.qty > 0);
-                      if (orderedItems.length === 0) return null;
+
+                    if (key === 'furnitureOrders' && typeof value === 'object') {
+                      const activeOrders = Object.entries(value).filter(([_, item]) => item.qty > 0);
+                      if (activeOrders.length === 0) return null; // Hide if empty
                       return (
                         <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-                          <strong>Furniture Orders</strong>
+                          <strong>Additional Furniture</strong>
                           <div style={{width: '100%', background: '#fff', padding: '10px', borderRadius: '4px', marginTop: '10px', fontSize: '12px', border: '1px solid #e2e8f0'}}>
-                            {orderedItems.map(([code, item], i) => (
-                               <div key={i} style={{marginBottom: '5px'}}>• Code {code}: {item.qty} units @ {item.price}/-</div>
-                            ))}
+                            {activeOrders.map(([code, item]) => <div key={code}>• {code}: {item.qty} units</div>)}
                           </div>
                         </div>
                       );
@@ -244,7 +296,14 @@ export default function AdminPage() {
               </div>
             ))}
             
-            <div className="mt-40" style={{textAlign: 'right'}}>
+            <div className="mt-40" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <button 
+                className="btn-save" 
+                onClick={() => handlePrintLetter(selectedCompanyForms)}
+                style={{background: '#1e40af', padding: '10px 20px', display: 'flex', gap: '8px', alignItems: 'center'}}
+              >
+                <i className="fas fa-file-pdf"></i> Generate Participation Letter
+              </button>
               <button className="btn-gray" onClick={() => setSelectedCompanyForms(null)}>Close View</button>
             </div>
           </div>

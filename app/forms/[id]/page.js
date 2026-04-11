@@ -39,13 +39,14 @@ export default function FormDetailPage({ params }) {
   const [logoPreview, setLogoPreview] = useState(null);
 
   // Badges fields (F03)
-  const [badges, setBadges] = useState([]);
-  const [isAddingBadge, setIsAddingBadge] = useState(false);
-  const [newBadge, setNewBadge] = useState({
-    type: 'Exhibitor', title: 'Mr.', firstName: '', lastName: '', mobile: '', altMobile: '', email: '',
-    altEmail: '', companyName: '', designation: '', dob: '', idProofType: 'Aadhar Card', idProofNumber: '',
-    emergencyContact: '', emergencyNumber: '', emergencyRelation: '', terms: false
-  });
+   const [badges, setBadges] = useState([]);
+   const [isAddingBadge, setIsAddingBadge] = useState(false);
+   const [editingBadgeIndex, setEditingBadgeIndex] = useState(-1);
+   const [newBadge, setNewBadge] = useState({
+     type: 'Exhibitor', title: 'Mr.', firstName: '', lastName: '', mobile: '', altMobile: '', email: '',
+     altEmail: '', companyName: '', designation: '', dob: '', idProofType: 'Aadhar Card', idProofNumber: '',
+     emergencyContact: '', emergencyNumber: '', emergencyRelation: '', terms: false
+   });
 
   // Fascia Name (F04)
   const [fasciaName, setFasciaName] = useState("");
@@ -161,15 +162,26 @@ export default function FormDetailPage({ params }) {
 
   const handleSaveBadge = (e) => {
     e.preventDefault();
-    if (badges.length >= 6) { 
+    if (editingBadgeIndex === -1 && badges.length >= 6) { 
       alert("Only 6 badges allowed per login. Please make a request for more badges through mail at abhishek.tresubmedia@gmail.com"); 
       return; 
     }
     if (!newBadge.terms) { alert("Please accept the terms and conditions"); return; }
-    const badgeToPush = { ...newBadge, urn: `URN${Math.floor(Math.random() * 10000)}`, status: 'Pending' };
-    const updatedBadges = [...badges, badgeToPush];
+    
+    let updatedBadges;
+    if (editingBadgeIndex > -1) {
+      // Update existing badge
+      updatedBadges = [...badges];
+      updatedBadges[editingBadgeIndex] = { ...newBadge };
+    } else {
+      // Add new badge
+      const badgeToPush = { ...newBadge, urn: `URN${Math.floor(Math.random() * 10000)}`, status: 'Pending' };
+      updatedBadges = [...badges, badgeToPush];
+    }
+    
     setBadges(updatedBadges);
     setIsAddingBadge(false);
+    setEditingBadgeIndex(-1);
     
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('submittedForms');
@@ -185,6 +197,13 @@ export default function FormDetailPage({ params }) {
       try { fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(F03Data) }); } catch(err) {}
     }
     setNewBadge({ type: 'Exhibitor', title: 'Mr.', firstName: '', lastName: '', mobile: '', altMobile: '', email: '', altEmail: '', companyName: authCompanyName, designation: '', dob: '', idProofType: 'Aadhar Card', idProofNumber: '', emergencyContact: '', emergencyNumber: '', emergencyRelation: '', terms: false });
+  };
+
+  const handleEditBadge = (idx) => {
+    if (isComplete) return; // Prevent edit after final submit
+    setNewBadge({ ...badges[idx] });
+    setEditingBadgeIndex(idx);
+    setIsAddingBadge(true);
   };
 
   const handleLogoUpload = (e) => {
@@ -299,7 +318,10 @@ export default function FormDetailPage({ params }) {
         <div className="badge-info-text"><h4>No. of Badges Alloted : - 5 Exhibitor & 1 Service badges</h4></div>
         <div className="badge-action-btns">
           <div className="badge-action-row mt-10">
-            <button className="btn-green" onClick={() => setIsAddingBadge(true)} disabled={badges.length >= 6}>+ Add Badge</button>
+            {!isComplete && (
+              <button className="btn-green" onClick={() => { setIsAddingBadge(true); setEditingBadgeIndex(-1); }} disabled={badges.length >= 6}>+ Add Badge</button>
+            )}
+            {isComplete && <span style={{fontSize: '13px', color: '#16a34a', fontWeight: 'bold'}}>Form Submitted (Locked)</span>}
           </div>
           {badges.length >= 6 && (
             <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '10px' }}>
@@ -312,8 +334,28 @@ export default function FormDetailPage({ params }) {
         <table className="badge-table">
           <thead><tr><th>#</th><th>Type</th><th>URN</th><th>Name</th><th>Company Name</th><th>Email</th><th>Mobile</th><th>Status</th><th>Action</th></tr></thead>
           <tbody>
-            {badges.length === 0 ? <tr><td colSpan="9" style={{textAlign: "center", padding: "20px"}}>No badges added yet.</td></tr> : badges.map((badge, idx) => (
-              <tr key={idx}><td>{idx + 1}</td><td>{badge.type}</td><td>{badge.urn}</td><td>{badge.firstName} {badge.lastName}</td><td>{badge.companyName}</td><td>{badge.email}</td><td>{badge.mobile}</td><td><span className="badge-status-pill">{badge.status}</span></td><td><i className="fas fa-bars" style={{color: '#22c55e', cursor: 'pointer'}}></i></td></tr>
+            {(badges || []).length === 0 ? <tr><td colSpan="9" style={{textAlign: "center", padding: "20px"}}>No badges added yet.</td></tr> : badges.map((badge, idx) => (
+              <tr key={idx}>
+                <td>{idx + 1}</td>
+                <td>{badge.type || 'Exhibitor'}</td>
+                <td>{badge.urn}</td>
+                <td>{badge.firstName} {badge.lastName}</td>
+                <td>{badge.companyName}</td>
+                <td>{badge.email}</td>
+                <td>{badge.mobile}</td>
+                <td><span className="badge-status-pill">{badge.status}</span></td>
+                <td>
+                  {!isComplete && (
+                    <button 
+                      onClick={() => handleEditBadge(idx)} 
+                      style={{background: '#84cc16', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px'}}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  {isComplete && <i className="fas fa-lock" style={{color: '#94a3b8'}}></i>}
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -323,7 +365,9 @@ export default function FormDetailPage({ params }) {
 
   const renderF03AddBadge = () => (
     <form className="card mt-20" onSubmit={handleSaveBadge} style={{ padding: '0', overflow: 'hidden' }}>
-      <div style={{ background: '#f8fafc', padding: '15px 20px', borderBottom: '1px solid #e2e8f0' }}><h3 style={{ margin: 0, fontSize: '16px' }}>Badge</h3></div>
+      <div style={{ background: '#f8fafc', padding: '15px 20px', borderBottom: '1px solid #e2e8f0' }}>
+        <h3 style={{ margin: 0, fontSize: '16px' }}>{editingBadgeIndex > -1 ? 'Edit Badge' : 'Add Badge'}</h3>
+      </div>
       <div style={{ padding: '30px' }}>
         <div className="form-row-grid" style={{ gridTemplateColumns: '100px 1fr 1fr' }}>
           <div className="form-row"><label>Title</label><select className="gray-input" value={newBadge.title} onChange={e => setNewBadge({...newBadge, title: e.target.value})}><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></div>
@@ -338,7 +382,10 @@ export default function FormDetailPage({ params }) {
         <div className="terms-section mt-20">
           <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '12px', cursor: 'pointer' }}><input type="checkbox" checked={newBadge.terms} onChange={e => setNewBadge({...newBadge, terms: e.target.checked})} style={{ marginTop: '3px' }}/><span>I accept the Terms and Conditions</span></label>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '30px' }}><button type="submit" className="btn-green">Save</button><button type="button" className="btn-gray" onClick={() => setIsAddingBadge(false)}>Cancel</button></div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '30px' }}>
+          <button type="submit" className="btn-green">{editingBadgeIndex > -1 ? 'Update' : 'Save'}</button>
+          <button type="button" className="btn-gray" onClick={() => { setIsAddingBadge(false); setEditingBadgeIndex(-1); }}>Cancel</button>
+        </div>
       </div>
     </form>
   );

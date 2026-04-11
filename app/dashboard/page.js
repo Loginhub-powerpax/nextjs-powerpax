@@ -78,8 +78,6 @@ export default function DashboardPage() {
             <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap' }}>
               <div style={{ flex: '1 1 65%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                  <h4 style={{ color: '#ea580c', fontSize: '13px', textTransform: 'uppercase', marginBottom: '15px' }}>IMPORTANT INFORMATION:</h4>
-                 <ul style={{ listStyle: 'disc', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.6', color: '#334155' }}>
-                   <li style={{ color: '#ef4444', marginBottom: '5px' }}>Distribution of chocolates & candies is strictly prohibited.</li>
                    <li style={{ color: '#ef4444', marginBottom: '5px' }}>Any onsite changes in Fascia name submitted will be charged at Rs. 2000/- per request.</li>
                    <li style={{ color: '#ef4444', marginBottom: '5px' }}>No outside Food & Beverage is allowed inside the venue premises.</li>
                    <li style={{ marginBottom: '5px' }}><strong>Visitors / Exhibitors must present a valid, current government-issued photo ID</strong> proving their identity at any entry point, as requested by the organiser or its assigned staff.</li>
