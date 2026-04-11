@@ -442,7 +442,7 @@ export default function FormDetailPage({ params }) {
         </ol>
         <p style={{ marginTop: '15px', fontSize: '13px', color: '#0f172a', fontWeight: '500' }}>
           <i className="fas fa-info-circle" style={{ color: '#0ea5e9', marginRight: '8px' }}></i>
-          After making the payment, please drop a mail with the confirmation to: <a href="mailto:neha@renewablemirror.com" style={{ color: '#0ea5e9', textDecoration: 'underline' }}>neha@renewablemirror.com</a>
+          After making the payment, please drop a mail with the confirmation to: <a href="mailto:accounts@tresubmedia.com" style={{ color: '#0ea5e9', textDecoration: 'underline' }}>accounts@tresubmedia.com</a>
         </p>
       </div>
       <div className="form-actions-footer mt-40">
