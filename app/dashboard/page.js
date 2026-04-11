@@ -17,7 +17,7 @@ const INITIAL_MANDATORY_FORMS = [
 export default function DashboardPage() {
   const [mandatoryForms, setMandatoryForms] = useState(INITIAL_MANDATORY_FORMS);
   const [companyName, setCompanyName] = useState('Exhibitor Company');
-  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'forms', 'manual'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'forms', 'manual', 'contact'
 
   const handleLogout = () => {
     localStorage.removeItem('companyName');
@@ -80,7 +80,7 @@ export default function DashboardPage() {
           <button onClick={() => setActiveTab('manual')} style={navItemStyle('manual')}>
             <i className="fas fa-info-circle"></i> Exhibitor Manual
           </button>
-          <button onClick={() => setActiveTab('manual')} style={navItemStyle('contact')}>
+          <button onClick={() => setActiveTab('contact')} style={navItemStyle('contact')}>
             <i className="fas fa-phone"></i> Contact Support
           </button>
         </nav>
@@ -161,6 +161,43 @@ export default function DashboardPage() {
           {activeTab === 'manual' && (
             <section className="dashboard-section">
                <ExhibitorManual />
+            </section>
+          )}
+
+          {activeTab === 'contact' && (
+            <section>
+              <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Contact Support</h1>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Official Show Contractor</h3>
+                  <p style={{ fontSize: '15px', color: '#1e293b', fontWeight: 'bold', marginBottom: '5px' }}>Mm Media & Exhibition</p>
+                  <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '15px' }}>Himanshu Pandey / Mukesh</p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                      <i className="fas fa-phone-alt" style={{ color: '#84cc16' }}></i>
+                      <span>9241098989 / 97187 25782</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                      <i className="fas fa-envelope" style={{ color: '#84cc16' }}></i>
+                      <span>Marketing@mmexhibition.com</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Organiser Support</h3>
+                  <p style={{ fontSize: '15px', color: '#1e293b', fontWeight: 'bold', marginBottom: '5px' }}>PowerPax India Team</p>
+                  <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '15px' }}>General Enquiries & Technical Support</p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                      <i className="fas fa-globe" style={{ color: '#84cc16' }}></i>
+                      <a href="http://www.powerpaxindia.com" target="_blank" style={{ color: '#1e293b', textDecoration: 'none' }}>www.powerpaxindia.com</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
           )}
         </div>
