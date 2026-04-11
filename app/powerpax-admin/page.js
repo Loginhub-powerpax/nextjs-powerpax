@@ -104,87 +104,46 @@ export default function AdminPage() {
   }, {});
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f1f5f9', fontFamily: 'sans-serif' }}>
-      {/* Left Sidebar */}
-      <aside style={{ width: '280px', background: '#0f172a', color: '#fff', display: 'flex', flexDirection: 'column', boxShadow: '2px 0 10px rgba(0,0,0,0.1)' }}>
-        <div style={{ padding: '30px 20px', borderBottom: '1px solid #1e293b' }}>
-          <h2 style={{ margin: 0, color: '#e2e8f0', fontSize: '18px' }}>PowerPax India</h2>
-          <p style={{ margin: '5px 0 0', color: '#84cc16', fontSize: '12px', fontWeight: 'bold' }}>ADMIN CONSOLE</p>
+    <div className="dashboard-container" style={{maxWidth: '1200px', margin: '0 auto', padding: '20px'}}>
+      <header className="dashboard-header" style={{marginBottom: '30px'}}>
+        <div className="header-left">
+          <Link href="/dashboard" className="note" style={{textDecoration: 'none'}}>← Back to Portal</Link>
+          <h2 style={{marginTop: '10px'}}>PowerPax India | Submission Backend</h2>
         </div>
-        
-        <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-          <div style={{ marginBottom: '30px' }}>
-            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#64748b', marginBottom: '10px', fontWeight: 'bold' }}>Navigation</div>
-            <button style={{ width: '100%', padding: '12px 15px', background: '#1e293b', color: '#fff', border: 'none', textAlign: 'left', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <i className="fas fa-list"></i> Submissions
-            </button>
-            <Link href="/dashboard" style={{ display: 'block', width: '100%', padding: '12px 15px', color: '#94a3b8', textDecoration: 'none', marginTop: '5px', borderRadius: '6px', cursor: 'pointer' }}>
-              <i className="fas fa-external-link-alt" style={{marginRight: '10px'}}></i> Exhibitor Portal
-            </Link>
-          </div>
-
-          {selectedCompanyForms && (
-            <div style={{ background: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #334155' }}>
-              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#84cc16', marginBottom: '10px', fontWeight: 'bold' }}>Active Selection</div>
-              <h4 style={{ margin: '0 0 15px 0', color: '#fff', fontSize: '14px', lineHeight: '1.4' }}>
-                {selectedCompanyForms[0].auth_company_name || selectedCompanyForms[0].company_name || selectedCompanyForms[0].username}
-              </h4>
-              <button 
-                onClick={() => handlePrintLetter(selectedCompanyForms)} 
-                style={{ width: '100%', padding: '12px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', fontSize: '13px', transition: 'background 0.2s' }}
-                onMouseOver={(e) => e.target.style.background = '#2563eb'}
-                onMouseOut={(e) => e.target.style.background = '#3b82f6'}
-              >
-                <i className="fas fa-file-pdf"></i> Download Letter
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div style={{ padding: '20px', borderTop: '1px solid #1e293b' }}>
-          <button 
-            onClick={() => setIsAuthenticated(false)} 
-            style={{ width: '100%', padding: '12px', background: 'transparent', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', transition: 'all 0.2s' }}
-            onMouseOver={(e) => { e.target.style.background = '#ef4444'; e.target.style.color = '#fff'; }}
-            onMouseOut={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#ef4444'; }}
-          >
+        <div className="header-right" style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={fetchSubmissions} className="btn-save" style={{padding: '8px 15px', fontSize: '12px'}}>
+            <i className="fas fa-sync"></i> Refresh Data
+          </button>
+          <button onClick={() => setIsAuthenticated(false)} style={{padding: '8px 15px', fontSize: '12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold'}}>
             <i className="fas fa-sign-out-alt"></i> Logout
           </button>
         </div>
-      </aside>
+      </header>
 
-      {/* Main Content */}
-      <main style={{ flex: 1, padding: '40px', overflowY: 'auto', background: '#f8fafc' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-          <h1 style={{ margin: 0, fontSize: '24px', color: '#0f172a' }}>Form Submissions</h1>
-          <button onClick={fetchSubmissions} className="btn-save" style={{ padding: '10px 20px', fontSize: '13px', background: '#fff', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: '6px', cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-            <i className="fas fa-sync" style={{ color: '#64748b', marginRight: '8px' }}></i> Refresh Data
-          </button>
-        </header>
+      {error && (
+        <div style={{ background: '#ffeeee', color: '#cc0000', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #ffcccc' }}>
+          <strong>Connection Error:</strong> {error}
+        </div>
+      )}
 
-        {error && (
-          <div style={{ background: '#fef2f2', color: '#991b1b', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #fecaca' }}>
-            <strong>Connection Error:</strong> {error}
-          </div>
-        )}
-
-        <div className="card" style={{ background: '#fff', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+      <main>
+        <div className="card">
+          <div style={{overflowX: 'auto'}}>
+            <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '14px'}}>
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', textAlign: 'left' }}>
-                  <th style={{ padding: '15px 20px', color: '#64748b', fontWeight: '600' }}>Latest Update</th>
-                  <th style={{ padding: '15px 20px', color: '#64748b', fontWeight: '600' }}>Company</th>
-                  <th style={{ padding: '15px 20px', color: '#64748b', fontWeight: '600' }}>Forms Filled</th>
-                  <th style={{ padding: '15px 20px', color: '#64748b', fontWeight: '600' }}>Contact Info</th>
-                  <th style={{ padding: '15px 20px', color: '#64748b', fontWeight: '600', textAlign: 'right' }}>Action</th>
+                <tr style={{borderBottom: '2px solid #eee', textAlign: 'left'}}>
+                  <th style={{padding: '12px'}}>Latest Update</th>
+                  <th style={{padding: '12px'}}>Company</th>
+                  <th style={{padding: '12px'}}>Forms Filled</th>
+                  <th style={{padding: '12px'}}>Contact Info</th>
+                  <th style={{padding: '12px'}}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan="5" style={{ padding: '60px', textAlign: 'center', color: '#64748b' }}><i className="fas fa-spinner fa-spin" style={{marginRight: '10px'}}></i> Loading company profiles...</td></tr>
+                  <tr><td colSpan="5" style={{padding: '40px', textAlign: 'center'}}>Loading company profiles...</td></tr>
                 ) : Object.keys(groupedSubmissions).length === 0 ? (
-                  <tr><td colSpan="5" style={{ padding: '60px', textAlign: 'center', color: '#64748b' }}>No submissions found.</td></tr>
+                  <tr><td colSpan="5" style={{padding: '40px', textAlign: 'center'}}>No submissions found.</td></tr>
                 ) : (
                   Object.keys(groupedSubmissions).map(key => {
                     const forms = groupedSubmissions[key];
@@ -193,34 +152,35 @@ export default function AdminPage() {
                     const allFormIds = ['F01', 'F02', 'F03', 'F04', 'F05', 'F06'];
                     
                     return (
-                      <tr key={key} style={{ borderBottom: '1px solid #f1f5f9', background: selectedCompanyForms && selectedCompanyForms[0].username === recentSub.username ? '#f0fdf4' : 'transparent', transition: 'background 0.2s' }}>
-                        <td style={{ padding: '15px 20px', whiteSpace: 'nowrap', color: '#475569' }}>{new Date(recentSub.created_at).toLocaleString()}</td>
-                        <td style={{ padding: '15px 20px' }}>
-                          <div style={{ fontWeight: 'bold', color: '#0f172a' }}>{recentSub.auth_company_name || recentSub.company_name || recentSub.username}</div>
-                          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>User: {recentSub.username}</div>
+                      <tr key={key} style={{borderBottom: '1px solid #f9f9f9'}}>
+                        <td style={{padding: '12px', whiteSpace: 'nowrap'}}>{new Date(recentSub.created_at).toLocaleString()}</td>
+                        <td style={{padding: '12px'}}>
+                          <div style={{fontWeight: 'bold', color: '#1a1a1a'}}>{recentSub.auth_company_name || recentSub.company_name || recentSub.username}</div>
+                          <div style={{fontSize: '11px', color: '#64748b'}}>User: {recentSub.username}</div>
                         </td>
-                        <td style={{ padding: '15px 20px' }}>
-                          <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                        <td style={{padding: '12px'}}>
+                          <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
                             {allFormIds.map(fid => (
                               <span key={fid} style={{
-                                width: '30px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: '10px', borderRadius: '4px', fontWeight: 'bold',
-                                background: filledFormIds.includes(fid) ? '#22c55e' : '#f1f5f9',
-                                color: filledFormIds.includes(fid) ? '#fff' : '#cbd5e1'
+                                width: '28px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: '9px', borderRadius: '3px', fontWeight: 'bold',
+                                background: filledFormIds.includes(fid) ? '#22c55e' : '#e2e8f0',
+                                color: filledFormIds.includes(fid) ? '#fff' : '#94a3b8'
                               }}>
                                 {fid}
                               </span>
                             ))}
                           </div>
                         </td>
-                        <td style={{ padding: '15px 20px', fontSize: '13px', color: '#475569' }}>
-                          <div style={{marginBottom: '4px'}}><i className="fas fa-envelope" style={{color: '#cbd5e1', marginRight: '6px', width: '14px'}}></i> {recentSub.email || '-'}</div>
-                          <div><i className="fas fa-phone" style={{color: '#cbd5e1', marginRight: '6px', width: '14px'}}></i> {recentSub.mobile || '-'}</div>
+                        <td style={{padding: '12px', fontSize: '12px'}}>
+                          <div>{recentSub.email || '-'}</div>
+                          <div>{recentSub.mobile || '-'}</div>
                         </td>
-                        <td style={{ padding: '15px 20px', textAlign: 'right' }}>
+                        <td style={{padding: '12px'}}>
                           <button 
                             onClick={() => setSelectedCompanyForms(forms)}
-                            style={{ padding: '8px 16px', fontSize: '12px', background: '#0f172a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>
+                            className="btn-save" 
+                            style={{padding: '5px 12px', fontSize: '11px', background: '#333'}}>
                             View Details
                           </button>
                         </td>
@@ -236,104 +196,119 @@ export default function AdminPage() {
 
       {/* Modal for Grouped Details */}
       {selectedCompanyForms && (
-        <div style={{ position: 'fixed', top: 0, left: '280px', right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.4)', zIndex: 1000, display: 'flex', padding: '0', backdropFilter: 'blur(4px)' }}>
-          {/* Slide-over panel instead of center modal for better UX with a sidebar */}
-          <div style={{ background: '#fff', width: '100%', maxWidth: '800px', height: '100%', marginLeft: 'auto', boxShadow: '-10px 0 30px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', animation: 'slideIn 0.3s ease-out' }}>
-            <div style={{ padding: '30px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', background: '#f8fafc' }}>
-               <div>
-                  <h2 style={{ margin: '0 0 8px 0', color: '#0f172a', fontSize: '22px' }}>{selectedCompanyForms[0].auth_company_name || selectedCompanyForms[0].company_name}</h2>
-                  <div style={{ display: 'inline-block', background: '#e0e7ff', color: '#4338ca', padding: '4px 10px', borderRadius: '999px', fontSize: '12px', fontWeight: '600' }}>
-                     {Object.keys(selectedCompanyForms.reduce((acc, f) => ({...acc, [f.form_id]: true}), {})).length} Forms Completed
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
+          <div className="card" style={{ width: '100%', maxWidth: '900px', maxHeight: '85vh', overflowY: 'auto', position: 'relative' }}>
+            <button 
+              onClick={() => setSelectedCompanyForms(null)}
+              style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '20px' }}>
+              &times;
+            </button>
+            <div className="modal-content" style={{ maxWidth: '1000px', width: '95%', display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+              {/* Left Sidebar inside the Modal */}
+              <div style={{ flex: '0 0 280px', background: '#f8fafc', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <h2 style={{marginTop: 0, marginBottom: '0', fontSize: '20px'}}>{selectedCompanyForms[0].auth_company_name || selectedCompanyForms[0].company_name}</h2>
+                <div className="note" style={{ background: '#e0e7ff', color: '#4338ca', padding: '5px 10px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', display: 'inline-block', width: 'fit-content' }}>
+                  {Object.keys(selectedCompanyForms.reduce((acc, f) => ({...acc, [f.form_id]: true}), {})).length} Forms completed
+                </div>
+                
+                <hr style={{ border: '0', borderTop: '1px solid #cbd5e1', margin: '10px 0' }} />
+                
+                <button 
+                  className="btn-save" 
+                  onClick={() => handlePrintLetter(selectedCompanyForms)}
+                  style={{background: '#1e40af', padding: '12px', width: '100%', display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center', fontSize: '13px', borderRadius: '6px'}}
+                >
+                  <i className="fas fa-file-pdf"></i> Download Letter
+                </button>
+                <button className="btn-gray" onClick={() => setSelectedCompanyForms(null)} style={{ padding: '10px', width: '100%', borderRadius: '6px' }}>Close View</button>
+              </div>
+
+              {/* Right Content Area (Scrollable Forms Data) */}
+              <div style={{ flex: '1' }}>
+                {/* Sort and Filter: only show the latest submission for each unique form_id */}
+                {Object.values(selectedCompanyForms.reduce((acc, sub) => {
+                  // Keep only the most recent submission for each form_id
+                  if (!acc[sub.form_id] || new Date(sub.created_at) > new Date(acc[sub.form_id].created_at)) {
+                    acc[sub.form_id] = sub;
+                  }
+                  return acc;
+                }, {})).sort((a,b) => a.form_id.localeCompare(b.form_id)).map(sub => (
+                  <div key={sub.id} style={{marginBottom: '20px', border: '1px solid #e2e8f0', background: '#f8fafc', padding: '20px', borderRadius: '8px'}}>
+                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                          <span className="badge-status-lbl" style={{background: '#dcfce7', color: '#16a34a', padding: '4px 8px', borderRadius: '4px', fontSize: '12px'}}>{sub.form_id}</span>
+                          <h3 style={{fontSize: '16px', margin: 0, color: '#334155'}}>{sub.form_title}</h3>
+                        </div>
+                       <span style={{fontSize: '12px', color: '#64748b'}}>{new Date(sub.created_at).toLocaleString()}</span>
+                     </div>
+
+                     <hr style={{margin: '15px 0', border: '0', borderTop: '1px solid #e2e8f0'}} />
+
+                     <div className="summary-list" style={{ marginTop: '0' }}>
+                       {Object.entries(sub.all_data).map(([key, value]) => {
+                        // Filter out redundant fields
+                        const skippedKeys = ['companyName', 'formId', 'username', 'authCompanyName', 'timestamp', 'id', 'terms', 'urn', 'status'];
+                        if (skippedKeys.includes(key) || !value) return null;
+
+                        if (key === 'logoPreview') {
+                          return (
+                            <div key={key} className="summary-row">
+                              <strong>Company Logo</strong>
+                              <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+                                <img src={value} alt="Exhibitor Logo" style={{maxHeight: '100px', border: '1px solid #ddd', padding: '5px', background: '#fff'}} />
+                                <a href={value} download={`logo_${sub.auth_company_name || 'exhibitor'}.png`} style={{fontSize: '12px', color: '#84cc16', textDecoration: 'underline'}}>Download Image</a>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        if (key === 'badges' && Array.isArray(value)) {
+                          if (value.length === 0) return null; // Hide if empty
+                          return (
+                            <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
+                              <strong>Employee Badges ({value.length})</strong>
+                              <div style={{width: '100%', background: '#fff', padding: '10px', borderRadius: '4px', marginTop: '10px', fontSize: '12px', border: '1px solid #e2e8f0'}}>
+                                {value.map((b, i) => <div key={i} style={{marginBottom: '5px'}}>• {b.firstName} {b.lastName} ({b.type}) - {b.mobile}</div>)}
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        if (key === 'furnitureOrders' && typeof value === 'object') {
+                          const activeOrders = Object.entries(value).filter(([_, item]) => item.qty > 0);
+                          if (activeOrders.length === 0) return null; // Hide if empty
+                          return (
+                            <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
+                              <strong>Additional Furniture</strong>
+                              <div style={{width: '100%', background: '#fff', padding: '10px', borderRadius: '4px', marginTop: '10px', fontSize: '12px', border: '1px solid #e2e8f0'}}>
+                                {activeOrders.map(([code, item]) => <div key={code}>• {code}: {item.qty} units</div>)}
+                              </div>
+                            </div>
+                          );
+                        }
+                        
+                        // Exclude empty values or unnecessary objects
+                        if (!value || typeof value === 'object') return null;
+
+                        return (
+                          <div key={key} className="summary-row" style={{ padding: '8px 0'}}>
+                            <strong style={{textTransform: 'capitalize'}}>{key.replace(/([A-Z])/g, ' $1')}</strong>
+                            <span>{value}</span>
+                          </div>
+                        );
+                      })}
+                     </div>
                   </div>
-               </div>
-               <button 
-                  onClick={() => setSelectedCompanyForms(null)}
-                  style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#f1f5f9', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', transition: 'background 0.2s' }}
-                  onMouseOver={(e) => e.target.style.background = '#e2e8f0'}
-                  onMouseOut={(e) => e.target.style.background = '#f1f5f9'}
-               >
-                  <i className="fas fa-times" style={{fontSize: '16px'}}></i>
-               </button>
+                ))}
+              </div>
             </div>
-            
-            <div style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
-               {/* Sort and Filter: only show the latest submission for each unique form_id */}
-               {Object.values(selectedCompanyForms.reduce((acc, sub) => {
-                 if (!acc[sub.form_id] || new Date(sub.created_at) > new Date(acc[sub.form_id].created_at)) {
-                   acc[sub.form_id] = sub;
-                 }
-                 return acc;
-               }, {})).sort((a,b) => a.form_id.localeCompare(b.form_id)).map(sub => (
-                 <div key={sub.id} style={{ marginBottom: '25px', border: '1px solid #e2e8f0', background: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '15px 20px', borderBottom: '1px solid #e2e8f0' }}>
-                       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                         <span style={{ background: '#22c55e', color: '#fff', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>{sub.form_id}</span>
-                         <h3 style={{ fontSize: '16px', margin: 0, color: '#0f172a' }}>{sub.form_title}</h3>
-                       </div>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}><i className="far fa-clock" style={{marginRight: '5px'}}></i>{new Date(sub.created_at).toLocaleString()}</span>
-                    </div>
-
-                    <div style={{ padding: '0 20px 20px 20px' }}>
-                      {Object.entries(sub.all_data).map(([key, value]) => {
-                       const skippedKeys = ['companyName', 'formId', 'username', 'authCompanyName', 'timestamp', 'id', 'terms', 'urn', 'status'];
-                       if (skippedKeys.includes(key) || !value) return null;
-
-                       if (key === 'logoPreview') {
-                         return (
-                           <div key={key} style={{ marginTop: '20px' }}>
-                             <div style={{ fontSize: '12px', textTransform: 'uppercase', color: '#64748b', fontWeight: '600', marginBottom: '8px' }}>Company Logo</div>
-                             <div style={{ display: 'inline-flex', flexDirection: 'column', gap: '8px' }}>
-                               <img src={value} alt="Exhibitor Logo" style={{ maxHeight: '120px', border: '1px solid #e2e8f0', padding: '10px', background: '#f8fafc', borderRadius: '8px' }} />
-                               <a href={value} download={`logo_${sub.auth_company_name || 'exhibitor'}.png`} style={{ fontSize: '12px', color: '#3b82f6', textDecoration: 'none', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                  <i className="fas fa-download"></i> Download Image
-                               </a>
-                             </div>
-                           </div>
-                         );
-                       }
-
-                       if (key === 'badges' && Array.isArray(value)) {
-                         if (value.length === 0) return null;
-                         return (
-                           <div key={key} style={{ marginTop: '20px' }}>
-                             <div style={{ fontSize: '12px', textTransform: 'uppercase', color: '#64748b', fontWeight: '600', marginBottom: '8px' }}>Employee Badges ({value.length})</div>
-                             <div style={{ width: '100%', background: '#f8fafc', padding: '15px', borderRadius: '6px', fontSize: '13px', border: '1px solid #e2e8f0', color: '#0f172a' }}>
-                               {value.map((b, i) => <div key={i} style={{ marginBottom: '8px', paddingBottom: '8px', borderBottom: i !== value.length-1 ? '1px solid #e2e8f0' : 'none' }}><span style={{fontWeight:'600'}}>{b.firstName} {b.lastName}</span> <span style={{color: '#64748b'}}>({b.type})</span><br/><i className="fas fa-mobile-alt" style={{color: '#cbd5e1', marginRight: '6px', width: '10px'}}></i>{b.mobile}</div>)}
-                             </div>
-                           </div>
-                         );
-                       }
-
-                       if (key === 'furnitureOrders' && typeof value === 'object') {
-                         const activeOrders = Object.entries(value).filter(([_, item]) => item.qty > 0);
-                         if (activeOrders.length === 0) return null;
-                         return (
-                           <div key={key} style={{ marginTop: '20px' }}>
-                             <div style={{ fontSize: '12px', textTransform: 'uppercase', color: '#64748b', fontWeight: '600', marginBottom: '8px' }}>Additional Furniture Orders</div>
-                             <div style={{ width: '100%', background: '#f8fafc', padding: '15px', borderRadius: '6px', fontSize: '13px', border: '1px solid #e2e8f0', color: '#0f172a' }}>
-                               {activeOrders.map(([code, item]) => <div key={code} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', paddingBottom: '6px', borderBottom: '1px dashed #e2e8f0' }}><span style={{fontWeight: '500'}}>{code}</span> <span>{item.qty} units</span></div>)}
-                             </div>
-                           </div>
-                         );
-                       }
-                       
-                       if (!value || typeof value === 'object') return null;
-
-                       return (
-                         <div key={key} style={{ padding: '15px 0', borderBottom: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                           <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#64748b', fontWeight: '600' }}>{key.replace(/([A-Z])/g, ' $1')}</div>
-                           <div style={{ fontSize: '14px', color: '#0f172a' }}>{value}</div>
-                         </div>
-                       );
-                     })}
-                    </div>
-                 </div>
-               ))}
-            </div>
-            {/* We removed the bottom print button here since it's now beautifully positioned in the permanent left sidebar! */}
-          </div>
         </div>
-      )}
+      </div>
+    )}
+
+      <footer className="dashboard-footer" style={{marginTop: '40px'}}>
+        <p>Copyright © PowerPax India 2026 | Admin Console</p>
+      </footer>
     </div>
   );
 }
