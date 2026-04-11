@@ -17,7 +17,13 @@ const INITIAL_MANDATORY_FORMS = [
 export default function DashboardPage() {
   const [mandatoryForms, setMandatoryForms] = useState(INITIAL_MANDATORY_FORMS);
   const [companyName, setCompanyName] = useState('Exhibitor Company');
-  const [activeTab, setActiveTab] = useState('forms'); // 'forms' or 'manual'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'forms', 'manual'
+
+  const handleLogout = () => {
+    localStorage.removeItem('companyName');
+    localStorage.removeItem('submittedForms');
+    window.location.href = '/';
+  };
 
   useEffect(() => {
     // Load from local storage
@@ -38,81 +44,131 @@ export default function DashboardPage() {
     }
   }, []);
 
+  const navItemStyle = (tab) => ({
+    width: '100%',
+    padding: '12px 20px',
+    border: 'none',
+    background: activeTab === tab ? '#84cc16' : 'transparent',
+    color: activeTab === tab ? '#fff' : '#475569',
+    textAlign: 'left',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    transition: 'all 0.2s'
+  });
+
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <span>Welcome, <strong>{companyName}</strong></span>
+    <div className="dashboard-wrapper" style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc' }}>
+      {/* Sidebar */}
+      <aside className="sidebar" style={{ width: '280px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', padding: '25px', position: 'fixed', height: '100vh' }}>
+        <div className="sidebar-logo" style={{ marginBottom: '40px' }}>
+          <h2 style={{ fontSize: '20px', color: '#1e293b', margin: 0 }}>PowerPax India</h2>
+          <p style={{ fontSize: '12px', color: '#84cc16', fontWeight: 'bold', margin: 0 }}>Exhibitor Portal</p>
         </div>
-        <div className="header-right">
-          <i className="fas fa-user-circle"></i>
+
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+          <button onClick={() => setActiveTab('dashboard')} style={navItemStyle('dashboard')}>
+            <i className="fas fa-th-large"></i> Dashboard
+          </button>
+          <button onClick={() => setActiveTab('forms')} style={navItemStyle('forms')}>
+            <i className="fas fa-file-alt"></i> My Forms
+          </button>
+          <button onClick={() => setActiveTab('manual')} style={navItemStyle('manual')}>
+            <i className="fas fa-info-circle"></i> Exhibitor Manual
+          </button>
+          <button onClick={() => setActiveTab('manual')} style={navItemStyle('contact')}>
+            <i className="fas fa-phone"></i> Contact Support
+          </button>
+        </nav>
+
+        <div style={{ paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
+          <button 
+            onClick={handleLogout}
+            style={{ width: '100%', padding: '12px', background: '#fee2e2', color: '#ef4444', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+          >
+            <i className="fas fa-sign-out-alt"></i> Logout
+          </button>
         </div>
-      </header>
+      </aside>
 
-      <div className="dashboard-tabs" style={{ display: 'flex', borderBottom: '1px solid #ddd', padding: '0 20px', background: '#fff' }}>
-        <button 
-          onClick={() => setActiveTab('forms')}
-          style={{ padding: '15px 20px', border: 'none', background: 'none', fontSize: '15px', fontWeight: 'bold', borderBottom: activeTab === 'forms' ? '3px solid #84cc16' : '3px solid transparent', color: activeTab === 'forms' ? '#84cc16' : '#555', cursor: 'pointer' }}
-        >
-          My Forms
-        </button>
-        <button 
-          onClick={() => setActiveTab('manual')}
-          style={{ padding: '15px 20px', border: 'none', background: 'none', fontSize: '15px', fontWeight: 'bold', borderBottom: activeTab === 'manual' ? '3px solid #84cc16' : '3px solid transparent', color: activeTab === 'manual' ? '#84cc16' : '#555', cursor: 'pointer' }}
-        >
-          Exhibitor Manual
-        </button>
-      </div>
+      {/* Main Content Area */}
+      <main className="main-content" style={{ flex: 1, marginLeft: '280px', display: 'flex', flexDirection: 'column' }}>
+        <header className="dashboard-header" style={{ background: '#fff', padding: '15px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0' }}>
+          <div className="header-left">
+            <span>Welcome, <strong>{companyName}</strong></span>
+          </div>
+          <div className="header-right" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <Link href="/powerpax-admin" style={{ fontSize: '11px', color: '#94a3b8', textDecoration: 'none' }}>Admin Access</Link>
+            <i className="fas fa-user-circle" style={{ fontSize: '24px', color: '#64748b' }}></i>
+          </div>
+        </header>
 
-      <main className="dashboard-content" style={{ marginTop: '20px' }}>
-        
-        <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#0f172a', marginBottom: '20px', borderBottom: '2px solid #e2e8f0', paddingBottom: '10px' }}>Dashboard</h1>
+        <div style={{ padding: '30px', maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+          {activeTab === 'dashboard' && (
+            <section>
+              <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Quick Overview</h1>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <h4 style={{ color: '#64748b', fontSize: '14px', marginBottom: '10px' }}>Completion Status</h4>
+                  <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                    {mandatoryForms.filter(f => f.status === 'Complete').length} / {mandatoryForms.length}
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#84cc16' }}>Mandatory forms completed</p>
+                </div>
+                <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', cursor: 'pointer' }} onClick={() => setActiveTab('forms')}>
+                  <h4 style={{ color: '#64748b', fontSize: '14px', marginBottom: '10px' }}>Next Deadline</h4>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444' }}>29 Apr 2026</div>
+                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>All mandatory forms due by this date</p>
+                </div>
+              </div>
 
-        {activeTab === 'forms' ? (
-          <section className="dashboard-section">
-            <div className="section-title">
-              <h2>My Forms</h2>
-              <p className="note">Note : Forms labeled <span className="text-orange">Mandatory</span> must be completed.</p>
-            </div>
-
-            <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap' }}>
-              <div style={{ flex: '1 1 65%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                 <h4 style={{ color: '#ea580c', fontSize: '13px', textTransform: 'uppercase', marginBottom: '15px' }}>IMPORTANT INFORMATION:</h4>
-                 <ul style={{ listStyle: 'disc', paddingLeft: '20px', fontSize: '13px', lineHeight: '1.6', color: '#334155' }}>
-                   <li style={{ color: '#ef4444', marginBottom: '5px' }}>Distribution of chocolates & candies is strictly prohibited.</li>
-                   <li style={{ color: '#ef4444', marginBottom: '5px' }}>Any onsite changes in Fascia name submitted will be charged at Rs. 2000/- per request.</li>
-                   <li style={{ color: '#ef4444', marginBottom: '5px' }}>No outside Food & Beverage is allowed inside the venue premises.</li>
-                   <li style={{ marginBottom: '5px' }}><strong>Visitors / Exhibitors must present a valid, current government-issued photo ID</strong> proving their identity at any entry point, as requested by the organiser or its assigned staff.</li>
-                   <li style={{ marginBottom: '5px' }}>All packing materials like wraps, carton boxes etc. must be neatly collected and kept at the corner of your stand for the housekeeping staff to clear it. Failure to do so or littering the carpeted flooring / aisles, especially during the show opening hours will result in a penalty of Rs. 5,000/- per incident, being levied.</li>
-                   <li>Dispose of empty cartons, boxes, ladders, and any waste properly. Store materials within the stand or off-site. Contact the freight forwarder for storage (if available), with charges paid by the exhibitor/contractor. Excess items cannot be stored in pathways or behind stands/panels.</li>
+              <div style={{ marginTop: '30px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '25px' }}>
+                 <h4 style={{ color: '#ea580c', fontSize: '13px', textTransform: 'uppercase', marginBottom: '15px', fontWeight: 'bold' }}>Important Reminders:</h4>
+                 <ul style={{ paddingLeft: '20px', fontSize: '13px', lineHeight: '1.6', color: '#334155' }}>
+                   <li style={{ color: '#ef4444', marginBottom: '8px' }}>Onsite fascia name changes: Rs. 2000/- penalty.</li>
+                   <li style={{ color: '#ef4444', marginBottom: '8px' }}>No outside Food & Beverage allowed inside the venue.</li>
+                   <li>Strict adherence to dismantling times is mandatory on 3rd May evening.</li>
                  </ul>
               </div>
+            </section>
+          )}
 
-              <div style={{ flex: '1 1 30%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'left', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                 <p style={{ fontSize: '14px', color: '#0f172a', marginBottom: '20px' }}>Scan below QR code to access<br/>Exhibitor Manual on your<br/>mobile</p>
-                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://powerpax.tresubmedia.com/" alt="Exhibitor Manual QR Code" style={{ width: '120px', height: '120px' }} />
+          {activeTab === 'forms' && (
+            <section className="dashboard-section">
+              <div style={{ marginBottom: '25px' }}>
+                <h2 style={{ fontSize: '20px', margin: 0 }}>Mandatory Forms</h2>
+                <p style={{ fontSize: '13px', color: '#64748b' }}>Complete all forms below to ensure your stall compliance.</p>
               </div>
-            </div>
 
-            <div className="form-group-section">
-              <h3>Mandatory forms</h3>
-              <div className="form-list">
+              <div className="form-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {mandatoryForms.map(form => (
                   <FormListItem key={form.id} {...form} />
                 ))}
               </div>
-            </div>
-          </section>
-        ) : (
-          <section className="dashboard-section">
-             <ExhibitorManual />
-          </section>
-        )}
+
+              <div style={{ marginTop: '40px', background: '#f8fafc', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                <p style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '15px' }}>Quick Access QR Code</p>
+                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://powerpax.tresubmedia.com/`} alt="QR" style={{ width: '120px', height: '120px', borderRadius: '8px' }} />
+                <p style={{ fontSize: '12px', color: '#64748b', marginTop: '10px' }}>Scan for mobile dashboard access</p>
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'manual' && (
+            <section className="dashboard-section">
+               <ExhibitorManual />
+            </section>
+          )}
+        </div>
+
+        <footer style={{ marginTop: 'auto', textAlign: 'center', padding: '20px', fontSize: '12px', color: '#94a3b8', borderTop: '1px solid #e2e8f0', background: '#fff' }}>
+          <p>Copyright © PowerPax India 2026 | Safe Mode Active</p>
+        </footer>
       </main>
-      
-      <footer className="dashboard-footer">
-        <p>Copyright © PowerPax India 2026.</p>
-      </footer>
     </div>
   );
 }
