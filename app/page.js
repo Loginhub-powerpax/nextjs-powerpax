@@ -2,32 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { loginAction } from './actions/auth';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
-    // Warm up the server immediately on page load.
-    // If the server just cold-started, this ping gives it time to boot
-    // before the user submits the login form.
-    fetch('/api/ping', { cache: 'no-store' }).catch(() => {});
   }, []);
 
-  /**
-   * Fetch with automatic retry on network failure (handles cold-start).
-   * Retries up to `maxRetries` times with exponential backoff.
-   */
-  const fetchWithRetry = async (url, options, maxRetries = 3) => {
-    let lastError;
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         const res = await fetch(url, options);
         return res; // success — return immediately

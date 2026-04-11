@@ -546,83 +546,81 @@ export default function FormDetailPage({ params }) {
         <button type="submit" className="btn-save">{isComplete ? "Update Form" : "Save Changes"}</button>
       </div>
     </form>
-  );
-
-  return (
-    <div className="form-detail-wrapper">
-      <header className="dashboard-header thin">
-        <div className="header-left"><span>Welcome, <strong>{authCompanyName}</strong></span></div>
-        <div className="header-right"><i className="fas fa-user-circle"></i></div>
+    return (
+    <div className="form-detail-wrapper" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', fontFamily: 'sans-serif' }}>
+      <header className="dashboard-header thin" style={{ background: '#fff', padding: '10px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #84cc16' }}>
+        <div className="header-left"><span style={{ fontSize: '14px' }}>Welcome, <strong style={{color: '#84cc16'}}>{authCompanyName}</strong></span></div>
+        <div className="header-right"><i className="fas fa-user-circle" style={{ fontSize: '20px', color: '#64748b' }}></i></div>
       </header>
 
-      <div className="form-header-bar">
-        <div className="container">
-          <div className="header-bar-content">
-            <Link href="/dashboard" className="back-btn"><i className="fas fa-chevron-left"></i></Link>
-            <h1>{formId} - {formTitle}</h1>
-            <div className="header-badges">
-              {isComplete ? <span className="badge status-complete">Complete</span> : <span className="badge status-pending">Pending</span>}
-              <span className="badge badge-deadline">Deadline: 29 Apr 2026</span>
+      <div className="form-header-bar" style={{ background: '#0f172a', color: '#fff', padding: '20px 0' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 30px' }}>
+          <div className="header-bar-content" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <Link href="/dashboard" className="back-btn" style={{ color: '#fff', fontSize: '18px', textDecoration: 'none' }}><i className="fas fa-chevron-left"></i></Link>
+            <h1 style={{ fontSize: '20px', margin: 0 }}>{formId} - {formTitle}</h1>
+            <div className="header-badges" style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+              {isComplete ? 
+                <span className="badge status-complete" style={{ background: '#dcfce7', color: '#16a34a', padding: '4px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' }}>Complete</span> : 
+                <span className="badge status-pending" style={{ background: '#fef9c3', color: '#a16207', padding: '4px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' }}>Pending</span>
+              }
+              <span className="badge badge-deadline" style={{ background: '#fee2e2', color: '#991b1b', padding: '4px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: 'bold' }}>Deadline: 29 Apr 2026</span>
             </div>
           </div>
         </div>
       </div>
 
-      <main className="form-detail-content">
-        <div className="container">
+      <main className="form-detail-content" style={{ flex: 1, padding: '30px 0' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 30px' }}>
           <div className="responsive-header-grid" style={{ 
             display: (formId === 'F03' && isAddingBadge) || (!companyName && !contactPerson && !standNumber && !hallNumber) ? 'none' : 'flex', 
             flexWrap: 'wrap', 
             gap: '20px', 
-            marginBottom: '20px' 
+            marginBottom: '30px' 
           }}>
             
             {/* Left Box: Company detail */}
             {(companyName || contactPerson || address || mobile) && (
-              <div className="header-box" style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
-                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Company detail</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '10px', fontSize: '13px', lineHeight: '1.4' }}>
-                  <strong style={{ color: '#000' }}>Company name</strong><span style={{ color: '#475569' }}>{companyName || '-'}</span>
-                  <strong style={{ color: '#000' }}>Contact Person</strong><span style={{ color: '#475569' }}>{contactPerson || '-'}</span>
-                  <strong style={{ color: '#000' }}>Email</strong><span style={{ color: '#475569' }}>{email || '-'}</span>
-                  <strong style={{ color: '#000' }}>Mobile no.</strong><span style={{ color: '#475569' }}>{mobile || '-'}</span>
-                  <strong style={{ color: '#000' }}>Address</strong><span style={{ color: '#475569' }}>{address || '-'}</span>
-                  <strong style={{ color: '#000' }}>GST Number</strong><span style={{ color: '#475569' }}>{gstNumber || '-'}</span>
+              <div className="header-box" style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#0f172a', textTransform: 'uppercase', fontWeight: 'bold' }}>Company Information</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, auto) 1fr', gap: '10px', fontSize: '13px', lineHeight: '1.4' }}>
+                  <strong style={{ color: '#64748b' }}>Company name:</strong><span style={{ color: '#1e293b' }}>{companyName || authCompanyName}</span>
+                  <strong style={{ color: '#64748b' }}>Contact Person:</strong><span style={{ color: '#1e293b' }}>{contactPerson || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Email:</strong><span style={{ color: '#1e293b' }}>{email || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Mobile no:</strong><span style={{ color: '#1e293b' }}>{mobile || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Address:</strong><span style={{ color: '#1e293b' }}>{address || '-'}</span>
                 </div>
               </div>
             )}
 
             {/* Right Box: Exhibitor Stand Detail */}
             {(standNumber || hallNumber || standType) && (
-              <div className="header-box" style={{ flex: '1 1 350px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '20px' }}>
-                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#1e293b' }}>Exhibitor Stand Detail</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(80px,auto) 1fr minmax(70px,auto) 1fr', gap: '10px 15px', fontSize: '13px', lineHeight: '1.4' }}>
-                  <strong style={{ color: '#000' }}>Stand no.</strong><span style={{ color: '#475569' }}>{standNumber || '-'}</span>
-                  <strong style={{ color: '#000' }}>Hall no</strong><span style={{ color: '#475569' }}>{hallNumber || '-'}</span>
-                  
-                  <strong style={{ color: '#000' }}>Stand type</strong><span style={{ color: '#475569' }}>{standType || '-'}</span>
-                  <strong style={{ color: '#000' }}>Stand size</strong><span style={{ color: '#475569' }}>{standSize || '-'}</span>
-
-                  <strong style={{ color: '#000' }}>Open side</strong><span style={{ color: '#475569' }}>{openSide || '-'}</span>
-                  <span></span><span></span>
+              <div className="header-box" style={{ flex: '1 1 350px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ fontSize: '14px', marginBottom: '15px', color: '#0f172a', textTransform: 'uppercase', fontWeight: 'bold' }}>Stand Allocation</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 70px 1fr', gap: '10px 15px', fontSize: '13px', lineHeight: '1.4' }}>
+                  <strong style={{ color: '#64748b' }}>Stand:</strong><span style={{ color: '#1e293b' }}>{standNumber || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Hall:</strong><span style={{ color: '#1e293b' }}>{hallNumber || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Type:</strong><span style={{ color: '#1e293b' }}>{standType || '-'}</span>
+                  <strong style={{ color: '#64748b' }}>Size:</strong><span style={{ color: '#1e293b' }}>{standSize || '-'}</span>
                 </div>
               </div>
             )}
-
           </div>
 
-          {formId === 'F01' ? renderF01Form() : null}
-          {formId === 'F02' ? renderF02Form() : null}
-          {formId === 'F03' ? (isAddingBadge ? renderF03AddBadge() : renderF03List()) : null}
-          {formId === 'F04' ? renderF04Form() : null}
-          {formId === 'F05' ? renderF06Form() : null}
-          {formId === 'F06' ? renderF07Form() : null}
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            {formId === 'F01' ? renderF01Form() : null}
+            {formId === 'F02' ? renderF02Form() : null}
+            {formId === 'F03' ? (isAddingBadge ? renderF03AddBadge() : renderF03List()) : null}
+            {formId === 'F04' ? renderF04Form() : null}
+            {formId === 'F05' ? renderF06Form() : null}
+            {formId === 'F06' ? renderF07Form() : null}
+          </div>
         </div>
       </main>
 
-      <footer className="dashboard-footer">
-        <p>Copyright © PowerPax India 2026.</p>
+      <footer className="dashboard-footer" style={{ textAlign: 'center', padding: '20px', fontSize: '12px', color: '#94a3b8', borderTop: '1px solid #e2e8f0', background: '#fff' }}>
+        <p>Copyright © PowerPax India 2026 | Ultra-Resilience Mode</p>
       </footer>
     </div>
+  );
   );
 }
