@@ -624,5 +624,4 @@ export default function FormDetailPage({ params }) {
       </footer>
     </div>
   );
-  );
 }

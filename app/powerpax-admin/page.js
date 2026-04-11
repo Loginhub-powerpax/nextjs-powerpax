@@ -308,7 +308,8 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
-      )}
+      </div>
+    )}
 
       <footer className="dashboard-footer" style={{marginTop: '40px'}}>
         <p>Copyright © PowerPax India 2026 | Admin Console</p>
