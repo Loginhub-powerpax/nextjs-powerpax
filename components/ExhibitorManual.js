@@ -164,21 +164,6 @@ export default function ExhibitorManual() {
         </div>
       </div>
 
-      <div className="manual-section">
-        <h3 style={{ borderBottom: '2px solid #84cc16', paddingBottom: '10px', marginBottom: '15px', color: '#333' }}>
-          6. Contact Information & Official Contractor
-        </h3>
-        
-        <div className="info-box" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
-            <h4 style={{ color: '#000', marginBottom: '5px' }}>Official Show Contractor &ndash; Mm Media & Exhibition</h4>
-            <p style={{ fontSize: '13px', color: '#555', marginBottom: '10px' }}>Covers shell scheme construction, custom-built booths, rental furniture, electrical fitting installation, plumbing services, A/V equipment rental, water & drainage, and temporary staff services.</p>
-            <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Website:</strong> www.mmexhibition.com</p>
-            <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Phone:</strong> 9241098989 (Himanshu Pandey) / 97187 25782 (Mukesh)</p>
-            <p style={{ fontSize: '14px', color: '#333', margin: '3px 0' }}><strong>Email:</strong> Marketing@mmexhibition.com / ashit.mmexhibition@gmail.com</p>
-        </div>
-
-
-      </div>
     </div>
   );
 }

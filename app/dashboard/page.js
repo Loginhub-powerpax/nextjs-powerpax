@@ -170,23 +170,6 @@ export default function DashboardPage() {
               <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Contact Support</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                 <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Official Show Contractor</h3>
-                  <p style={{ fontSize: '15px', color: '#1e293b', fontWeight: 'bold', marginBottom: '5px' }}>Mm Media & Exhibition</p>
-                  <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '15px' }}>Himanshu Pandey / Mukesh</p>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
-                      <i className="fas fa-phone-alt" style={{ color: '#84cc16' }}></i>
-                      <span>9241098989 / 97187 25782</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
-                      <i className="fas fa-envelope" style={{ color: '#84cc16' }}></i>
-                      <span>Marketing@mmexhibition.com</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ background: '#fff', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                   <h3 style={{ fontSize: '18px', color: '#1e293b', marginBottom: '15px' }}>Stall Booking</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', color: '#475569' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
