@@ -74,19 +74,29 @@ export default function DashboardPage() {
         setCompanyName(storedName);
         
               // --- LIVE SYNC WITH DATABASE ---
+              const storedUsername = localStorage.getItem('username') || storedName;
               fetch('/api/submissions', { cache: 'no-store' })
                 .then(res => res.json())
                 .then(result => {
                   if (result.success && result.data) {
-                    // Only look for forms belonging to THIS user
+                    // Match using username (login ID) first, or company name as fallback
                     const userSubmissions = result.data.filter(s => 
-                      (s.username === storedName || s.auth_company_name === storedName)
+                      s.username === storedUsername ||
+                      s.auth_company_name === storedUsername ||
+                      s.auth_company_name === storedName ||
+                      s.username === storedName
                     );
                     
                     const dbFullData = {};
                     userSubmissions.forEach(sub => {
-                      // Important: Store the full detail object, not just 'true'
-                      dbFullData[sub.form_id] = sub.all_data || {};
+                      // Only update if we have actual data (not empty object)
+                      const data = sub.all_data;
+                      if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                        dbFullData[sub.form_id] = data;
+                      } else if (!dbFullData[sub.form_id]) {
+                        // Mark as submitted even if all_data is empty
+                        dbFullData[sub.form_id] = { _submitted: true };
+                      }
                     });
 
                     // Update UI statuses

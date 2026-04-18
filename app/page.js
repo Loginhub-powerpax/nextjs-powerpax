@@ -61,6 +61,7 @@ export default function LoginPage() {
       // Store exhibitor data for dashboard and forms
       if (typeof window !== 'undefined' && data.user) {
         localStorage.setItem('companyName', data.user.company_name || 'Exhibitor Company');
+        localStorage.setItem('username', data.user.username || '');
         localStorage.setItem('exhibitorData', JSON.stringify(data.user));
       }
 
