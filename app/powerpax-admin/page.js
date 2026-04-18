@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { generateParticipationLetter } from '../../lib/LetterTemplate';
+import { generateParticipationLetter, generateFullSubmissionReport } from '../../lib/LetterTemplate';
 
 export default function AdminPage() {
   const [submissions, setSubmissions] = useState([]);
@@ -11,6 +10,27 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [selectedCompanyForms, setSelectedCompanyForms] = useState(null);
   const [error, setError] = useState(null);
+
+  const exportAllToCSV = () => {
+    if (submissions.length === 0) return;
+    const headers = ['Timestamp', 'Username', 'Company Name', 'Form ID', 'Form Title', 'Email', 'Mobile', 'Data'];
+    const rows = submissions.map(s => [
+      new Date(s.created_at).toLocaleString(),
+      s.username,
+      s.auth_company_name,
+      s.form_id,
+      s.form_title,
+      s.email || '-',
+      s.mobile || '-',
+      JSON.stringify(s.all_data || {})
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + 
+      rows.map(e => e.map(val => `"${val.toString().replace(/"/g, '""')}"`).join(",")).join("\n");
+    const link = document.createElement("a");
+    link.setAttribute("href", encodeURI(csvContent));
+    link.setAttribute("download", `powerpax_submissions_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  };
 
   // Simple hardcoded admin password for now
   const MASTER_PASSWORD = 'powerpax-admin'; 
@@ -108,7 +128,10 @@ export default function AdminPage() {
           <Link href="/dashboard" className="note" style={{textDecoration: 'none'}}>← Back to Portal</Link>
           <h2 style={{marginTop: '10px'}}>PowerPax India | Submission Backend</h2>
         </div>
-        <div className="header-right">
+        <div className="header-right" style={{display: 'flex', gap: '10px'}}>
+          <button onClick={exportAllToCSV} className="btn-save" style={{padding: '8px 15px', fontSize: '12px', background: '#334155'}}>
+            <i className="fas fa-file-csv"></i> Export All Record (CSV)
+          </button>
           <button onClick={fetchSubmissions} className="btn-save" style={{padding: '8px 15px', fontSize: '12px'}}>
             <i className="fas fa-sync"></i> Refresh Data
           </button>
@@ -289,15 +312,29 @@ export default function AdminPage() {
               );
             })}
             
-            <div className="mt-40" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div className="mt-40" style={{display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{display: 'flex', gap: '10px'}}>
+                <button 
+                  className="btn-save" 
+                  onClick={() => generateFullSubmissionReport(selectedCompanyForms)}
+                  style={{background: '#0891b2', padding: '10px 20px', display: 'flex', gap: '8px', alignItems: 'center'}}
+                >
+                  <i className="fas fa-file-download"></i> Download Full Information (PDF)
+                </button>
+                <button 
+                  className="btn-save" 
+                  onClick={() => handlePrintLetter(selectedCompanyForms)}
+                  style={{background: '#1e40af', padding: '10px 20px', display: 'flex', gap: '8px', alignItems: 'center'}}
+                >
+                  <i className="fas fa-file-pdf"></i> Participation Letter
+                </button>
+              </div>
               <button 
-                className="btn-save" 
-                onClick={() => handlePrintLetter(selectedCompanyForms)}
-                style={{background: '#1e40af', padding: '10px 20px', display: 'flex', gap: '8px', alignItems: 'center'}}
+                 onClick={() => setSelectedCompanyForms(null)}
+                 style={{padding: '10px 20px', background: '#f1f5f9', color: '#475569', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'}}
               >
-                <i className="fas fa-file-pdf"></i> Generate Participation Letter
+                Close View
               </button>
-              <button className="btn-gray" onClick={() => setSelectedCompanyForms(null)}>Close View</button>
             </div>
           </div>
         </div>
