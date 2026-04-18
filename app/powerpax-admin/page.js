@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { generateParticipationLetter, generateFullSubmissionReport } from '../../lib/LetterTemplate';
 
 export default function AdminPage() {
