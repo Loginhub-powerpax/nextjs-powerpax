@@ -260,19 +260,19 @@ export default function AdminPage() {
                     if (key === 'badges' && Array.isArray(value)) {
                       return (
                         <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '15px', background: '#fff', marginTop: '10px'}}>
-                          <strong style={{marginBottom: '10px', fontSize: '14px'}}>Employee Badges ({value.length})</strong>
+                          <strong style={{marginBottom: '10px', fontSize: '14px', color: '#1e40af'}}>Badge Submissions ({value.length})</strong>
                           <div style={{width: '100%', fontSize: '12px'}}>
                             {value.map((b, i) => (
                               <div key={i} style={{marginBottom: '20px', borderBottom: i < value.length - 1 ? '1px solid #f1f5f9' : 'none', paddingBottom: '15px'}}>
                                 <div style={{fontWeight: 'bold', color: '#1e40af', marginBottom: '8px', fontSize: '13px'}}>Person {i + 1}: {b.firstName} {b.lastName} ({b.type})</div>
-                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px 20px'}}>
+                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '8px 20px'}}>
                                   {Object.entries(b).map(([bk, bv]) => {
                                     if (bk === 'terms') return null;
                                     const label = bk.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                                     return (
-                                      <div key={bk} style={{display: 'flex', gap: '5px'}}>
+                                      <div key={bk} style={{display: 'flex', gap: '5px', borderBottom: '1px solid #f8fafc', paddingBottom: '2px'}}>
                                         <span style={{color: '#64748b', fontWeight: 'bold'}}>{label}:</span>
-                                        <span style={{color: '#334155'}}>{bv?.toString() || '-'}</span>
+                                        <span style={{color: '#334155'}}>{bv && bv.toString() !== '' ? bv.toString() : '-'}</span>
                                       </div>
                                     );
                                   })}
@@ -283,6 +283,7 @@ export default function AdminPage() {
                         </div>
                       );
                     }
+                    
                     if (key === 'furnitureOrders' && value) {
                       const orderedItems = Object.entries(value).filter(([_, item]) => item.qty > 0);
                       if (orderedItems.length === 0) return null;
@@ -298,13 +299,14 @@ export default function AdminPage() {
                       );
                     }
                     
-                    // Exclude empty values or unnecessary objects
-                    if (!value || typeof value === 'object') return null;
+                    // Show EVERYTHING else as a simple row (don't skip objects here)
+                    const displayValue = typeof value === 'object' ? JSON.stringify(value) : value.toString();
+                    if (!displayValue || displayValue === '{}') return null;
 
                     return (
-                      <div key={key} className="summary-row" style={{ padding: '8px 0'}}>
-                        <strong style={{textTransform: 'capitalize'}}>{key.replace(/([A-Z])/g, ' $1')}</strong>
-                        <span>{value}</span>
+                      <div key={key} className="summary-row" style={{ padding: '8px 0', borderBottom: '1px solid #f1f5f9'}}>
+                        <strong style={{textTransform: 'capitalize', color: '#475569'}}>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</strong>
+                        <span style={{color: '#1e293b'}}>{displayValue}</span>
                       </div>
                     );
                   })}
