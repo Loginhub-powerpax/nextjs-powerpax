@@ -87,24 +87,28 @@ export default function DashboardPage() {
                       s.username === storedName
                     );
                     
-                    const dbFullData = {};
+                    // Read what's currently in local storage to preserve rich objects like F03 badges
+                    const storedLocalStr = localStorage.getItem('submittedForms');
+                    const dbFullData = storedLocalStr ? JSON.parse(storedLocalStr) : {};
+                    
                     userSubmissions.forEach(sub => {
-                      // Only update if we have actual data (not empty object)
+                      // Only update from DB if we don't already have rich local data for this form
                       const data = sub.all_data;
-                      if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-                        dbFullData[sub.form_id] = data;
-                      } else if (!dbFullData[sub.form_id]) {
-                        // Mark as submitted even if all_data is empty
-                        dbFullData[sub.form_id] = { _submitted: true };
+                      if (!dbFullData[sub.form_id]) {
+                        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                          dbFullData[sub.form_id] = data;
+                        } else {
+                          dbFullData[sub.form_id] = { _submitted: true };
+                        }
                       }
                     });
 
-                    // Update UI statuses
+                    // Update UI statuses based on merged data
                     setMandatoryForms(prev => prev.map(f => 
                       dbFullData[f.id] ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' }
                     ));
 
-                    // Restore full data to local memory so Participation Letter works
+                    // Save merged data back to local memory
                     localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
                   }
                 })

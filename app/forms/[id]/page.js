@@ -181,7 +181,9 @@ export default function FormDetailPage({ params }) {
       const stored = localStorage.getItem('submittedForms');
       const parsed = stored ? JSON.parse(stored) : {};
       payload = {
-        formId, username: authUsername, authCompanyName,
+        formId,
+        username: authUsername || localStorage.getItem('username') || authCompanyName,
+        authCompanyName,
         companyName: companyName || authCompanyName,
         contactPerson, address, country, tel, fax, email, website, mobile, description, productCategory, logoPreview,
         badges, fasciaName, standNumber, hallNumber, customFascia, dateField,
