@@ -163,7 +163,7 @@ export default function LoginPage() {
         </form>
         
         <div className="card-footer">
-          <p>Need support? <a href="#">Contact Organizer</a></p>
+          <p style={{ marginTop: '15px' }}>Need support? <a href="mailto:abhishek.tresubmedia@gmail.com" style={{ color: '#84cc16', fontWeight: 'bold', textDecoration: 'none' }}>Contact Organizer</a></p>
         </div>
       </div>
       
