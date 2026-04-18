@@ -268,8 +268,9 @@ export default function AdminPage() {
                       </div>
                     );
                   })}
-                 </div>
-              </div>
+                  </div>
+               </div>
+              );
             })}
             
             <div className="mt-40" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
