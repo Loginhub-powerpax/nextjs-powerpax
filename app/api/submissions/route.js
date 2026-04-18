@@ -42,14 +42,27 @@ export async function GET() {
         return result;
     };
 
-    const headers = splitCsvRow(lines[0]);
+    // Define expected headers in order
+    const DEFAULT_HEADERS = ['timestamp', 'username', 'authCompanyName', 'companyName', 'formId', 'formTitle', 'email', 'mobile', 'allData'];
+    
+    let headers = splitCsvRow(lines[0]);
+    let startIdx = 1;
+
+    // If the first row doesn't look like headers (e.g. it's a date), assume headers are missing
+    if (headers[0] && headers[0].includes('T') && headers[0].includes(':') && headers[0].length > 15) {
+        headers = DEFAULT_HEADERS;
+        startIdx = 0; // The first row is actually data
+    }
     
     const submissions = [];
-    for (let i = 1; i < lines.length; i++) {
+    for (let i = startIdx; i < lines.length; i++) {
       const rowValues = splitCsvRow(lines[i]);
+      if (rowValues.length < 2) continue;
+      
       const sub = {};
       headers.forEach((header, index) => {
         let value = rowValues[index];
+        if (!value) return;
         
         // Map data to expected keys
         if (header === 'allData' && value) {
