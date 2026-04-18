@@ -97,40 +97,75 @@ export default function FormDetailPage({ params }) {
       }
 
       const stored = localStorage.getItem('submittedForms');
+      const stored = localStorage.getItem('submittedForms');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed[formId]) {
-          setIsComplete(true);
           const data = parsed[formId];
-          if (data.companyName) setCompanyName(data.companyName);
-          if (data.contactPerson) setContactPerson(data.contactPerson);
-          if (data.address) setAddress(data.address);
-          if (data.country) setCountry(data.country);
-          if (data.tel) setTel(data.tel);
-          if (data.fax) setFax(data.fax);
-          if (data.email) setEmail(data.email);
-          if (data.website) setWebsite(data.website);
-          if (data.mobile) setMobile(data.mobile);
-          if (data.description) setDescription(data.description);
-          if (data.productCategory) setProductCategory(data.productCategory);
-          if (data.logoPreview) setLogoPreview(data.logoPreview);
-
-          if (data.badges) setBadges(data.badges);
-          
-          if (data.fasciaName) setFasciaName(data.fasciaName);
-          if (data.standNumber) setStandNumber(data.standNumber);
-          if (data.hallNumber) setHallNumber(data.hallNumber);
-          if (data.standType) setStandType(data.standType);
-          if (data.standSize) setStandSize(data.standSize);
-          if (data.openSide) setOpenSide(data.openSide);
-          if (data.customFascia) setCustomFascia(data.customFascia);
-          if (data.dateField) setDateField(data.dateField);
-
-          if (data.furnitureOrders) setFurnitureOrders(data.furnitureOrders);
-          if (data.electricityItem) setElectricityItem(data.electricityItem);
-          if (data.wifiItem) setWifiItem(data.wifiItem);
-
+          if (data && typeof data === 'object') {
+            setIsComplete(true);
+            if (data.companyName) setCompanyName(data.companyName);
+            if (data.contactPerson) setContactPerson(data.contactPerson);
+            if (data.address) setAddress(data.address);
+            if (data.country) setCountry(data.country);
+            if (data.tel) setTel(data.tel);
+            if (data.fax) setFax(data.fax);
+            if (data.email) setEmail(data.email);
+            if (data.website) setWebsite(data.website);
+            if (data.mobile) setMobile(data.mobile);
+            if (data.description) setDescription(data.description);
+            if (data.productCategory) setProductCategory(data.productCategory);
+            if (data.logoPreview) setLogoPreview(data.logoPreview);
+            if (data.badges) setBadges(data.badges);
+            if (data.fasciaName) setFasciaName(data.fasciaName);
+            if (data.standNumber) setStandNumber(data.standNumber);
+            if (data.hallNumber) setHallNumber(data.hallNumber);
+            if (data.standType) setStandType(data.standType);
+            if (data.standSize) setStandSize(data.standSize);
+            if (data.openSide) setOpenSide(data.openSide);
+            if (data.customFascia) setCustomFascia(data.customFascia);
+            if (data.dateField) setDateField(data.dateField);
+            if (data.furnitureOrders) setFurnitureOrders(data.furnitureOrders);
+            if (data.electricityItem) setElectricityItem(data.electricityItem);
+            if (data.wifiItem) setWifiItem(data.wifiItem);
+          }
         }
+      }
+
+      // --- LIVE RECOVERY FROM DB --- 
+      // If we have a username, check the live database to be sure
+      if (storedName || authUsername) {
+        const checkUser = storedName || authUsername;
+        fetch('/api/submissions', { cache: 'no-store' })
+          .then(res => res.json())
+          .then(result => {
+             if (result.success && result.data) {
+               const mySub = result.data.find(s => 
+                 (s.username === checkUser || s.auth_company_name === checkUser) && s.form_id === formId
+               );
+               if (mySub && mySub.all_data) {
+                 const data = mySub.all_data;
+                 setIsComplete(true);
+                 if (data.companyName) setCompanyName(data.companyName);
+                 if (data.contactPerson) setContactPerson(data.contactPerson);
+                 if (data.address) setAddress(data.address);
+                 if (data.country) setCountry(data.country);
+                 if (data.tel) setTel(data.tel);
+                 if (data.fax) setFax(data.fax);
+                 if (data.email) setEmail(data.email);
+                 if (data.website) setWebsite(data.website);
+                 if (data.mobile) setMobile(data.mobile);
+                 if (data.description) setDescription(data.description);
+                 if (data.productCategory) setProductCategory(data.productCategory);
+                 if (data.logoPreview) setLogoPreview(data.logoPreview);
+                 if (data.badges) setBadges(data.badges || []);
+                 if (data.fasciaName) setFasciaName(data.fasciaName);
+                 if (data.standNumber) setStandNumber(data.standNumber);
+                 if (data.hallNumber) setHallNumber(data.hallNumber);
+                 if (data.furnitureOrders) setFurnitureOrders(data.furnitureOrders);
+               }
+             }
+          }).catch(e => console.error("Sync error in form:", e));
       }
     }
   }, [formId]);

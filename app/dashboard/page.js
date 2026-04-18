@@ -73,30 +73,31 @@ export default function DashboardPage() {
       if (storedName) {
         setCompanyName(storedName);
         
-        // --- LIVE SYNC WITH DATABASE ---
-        fetch('/api/submissions', { cache: 'no-store' })
-          .then(res => res.json())
-          .then(result => {
-            if (result.success && result.data) {
-              // Only look for forms belonging to THIS user
-              const userSubmissions = result.data.filter(s => 
-                (s.username === storedName || s.auth_company_name === storedName)
-              );
-              
-              const dbFormsStatus = {};
-              userSubmissions.forEach(sub => {
-                dbFormsStatus[sub.form_id] = true;
-              });
+              // --- LIVE SYNC WITH DATABASE ---
+              fetch('/api/submissions', { cache: 'no-store' })
+                .then(res => res.json())
+                .then(result => {
+                  if (result.success && result.data) {
+                    // Only look for forms belonging to THIS user
+                    const userSubmissions = result.data.filter(s => 
+                      (s.username === storedName || s.auth_company_name === storedName)
+                    );
+                    
+                    const dbFullData = {};
+                    userSubmissions.forEach(sub => {
+                      // Important: Store the full detail object, not just 'true'
+                      dbFullData[sub.form_id] = sub.all_data || {};
+                    });
 
-              // Update the UI: only 'Complete' if found in DB for this user
-              setMandatoryForms(prev => prev.map(f => 
-                dbFormsStatus[f.id] ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' }
-              ));
+                    // Update UI statuses
+                    setMandatoryForms(prev => prev.map(f => 
+                      dbFullData[f.id] ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' }
+                    ));
 
-              // Update local memory to match DB truth
-              localStorage.setItem('submittedForms', JSON.stringify(dbFormsStatus));
-            }
-          })
+                    // Restore full data to local memory so Participation Letter works
+                    localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
+                  }
+                })
           .catch(err => console.error("Sync error:", err));
       }
 
