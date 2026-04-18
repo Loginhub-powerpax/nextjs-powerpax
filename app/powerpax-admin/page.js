@@ -224,9 +224,22 @@ export default function AdminPage() {
             </button>
             
             <h2 style={{marginTop: 0, marginBottom: '5px'}}>{selectedCompanyForms[0].company_name}</h2>
-            <p className="note">{selectedCompanyForms.length} Forms submitted</p>
-            
-            {selectedCompanyForms.map(sub => {
+            {(() => {
+              // Deduplicate forms: keep only the latest submission per form_id
+              const latestFormsMap = {};
+              selectedCompanyForms.forEach(sub => {
+                const currentLatest = latestFormsMap[sub.form_id];
+                if (!currentLatest || new Date(sub.created_at) > new Date(currentLatest.created_at)) {
+                  latestFormsMap[sub.form_id] = sub;
+                }
+              });
+              const deduplicatedForms = Object.values(latestFormsMap).sort((a, b) => a.form_id.localeCompare(b.form_id));
+
+              return (
+                <>
+                  <p className="note">{deduplicatedForms.length} Form(s) (Showing Latest Updates Only)</p>
+                  
+                  {deduplicatedForms.map(sub => {
               // Safety: Ensure all_data is a proper object, not a string
               let displayData = sub.all_data || {};
               if (typeof displayData === 'string') {
@@ -234,7 +247,7 @@ export default function AdminPage() {
               }
 
               return (
-                <div key={sub.id} style={{marginTop: '20px', border: '1px solid #e2e8f0', background: '#f8fafc', padding: '20px', borderRadius: '8px'}}>
+                <div key={sub.form_id || sub.id} style={{marginTop: '20px', border: '1px solid #e2e8f0', background: '#f8fafc', padding: '20px', borderRadius: '8px'}}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                       <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                         <span className="badge-status-lbl" style={{background: '#dcfce7', color: '#16a34a', padding: '4px 8px', borderRadius: '4px', fontSize: '12px'}}>{sub.form_id}</span>
@@ -314,6 +327,9 @@ export default function AdminPage() {
                </div>
               );
             })}
+                </>
+              );
+            })()}
             
             <div className="mt-40" style={{display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'space-between', alignItems: 'center'}}>
               <div style={{display: 'flex', gap: '10px'}}>
