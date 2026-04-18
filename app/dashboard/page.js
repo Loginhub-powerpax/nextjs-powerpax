@@ -254,7 +254,7 @@ export default function DashboardPage() {
 
               <div style={{ marginTop: '40px', background: '#f8fafc', padding: '25px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                 <p style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '15px' }}>Quick Access QR Code</p>
-                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://powerpax.tresubmedia.com/`} alt="QR" style={{ width: '120px', height: '120px', borderRadius: '8px' }} />
+                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://powerpax.in/`} alt="QR" style={{ width: '120px', height: '120px', borderRadius: '8px' }} />
                 <p style={{ fontSize: '12px', color: '#64748b', marginTop: '10px' }}>Scan for mobile dashboard access</p>
               </div>
             </section>

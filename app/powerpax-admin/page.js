@@ -49,7 +49,7 @@ export default function AdminPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/submissions');
+      const response = await fetch('/api/submissions', { cache: 'no-store' });
       if (!response.ok) throw new Error('Failed to fetch data');
       const result = await response.json();
       if (!result.success) throw new Error(result.error);
