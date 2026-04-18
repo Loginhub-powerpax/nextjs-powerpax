@@ -235,10 +235,26 @@ export default function AdminPage() {
                     }
                     if (key === 'badges' && Array.isArray(value)) {
                       return (
-                        <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-                          <strong>Employee Badges ({value.length})</strong>
-                          <div style={{width: '100%', background: '#fff', padding: '10px', borderRadius: '4px', marginTop: '10px', fontSize: '12px', border: '1px solid #e2e8f0'}}>
-                            {value.map((b, i) => <div key={i} style={{marginBottom: '5px'}}>• {b.firstName} {b.lastName} ({b.type}) - {b.mobile}</div>)}
+                        <div key={key} className="summary-row" style={{flexDirection: 'column', alignItems: 'flex-start', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '15px', background: '#fff', marginTop: '10px'}}>
+                          <strong style={{marginBottom: '10px', fontSize: '14px'}}>Employee Badges ({value.length})</strong>
+                          <div style={{width: '100%', fontSize: '12px'}}>
+                            {value.map((b, i) => (
+                              <div key={i} style={{marginBottom: '20px', borderBottom: i < value.length - 1 ? '1px solid #f1f5f9' : 'none', paddingBottom: '15px'}}>
+                                <div style={{fontWeight: 'bold', color: '#1e40af', marginBottom: '8px', fontSize: '13px'}}>Person {i + 1}: {b.firstName} {b.lastName} ({b.type})</div>
+                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px 20px'}}>
+                                  {Object.entries(b).map(([bk, bv]) => {
+                                    if (bk === 'terms') return null;
+                                    const label = bk.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                                    return (
+                                      <div key={bk} style={{display: 'flex', gap: '5px'}}>
+                                        <span style={{color: '#64748b', fontWeight: 'bold'}}>{label}:</span>
+                                        <span style={{color: '#334155'}}>{bv?.toString() || '-'}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       );
