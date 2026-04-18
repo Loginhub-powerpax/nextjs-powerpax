@@ -24,9 +24,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'letter', 'manual', 'contact'
 
   const handleLogout = () => {
-    localStorage.removeItem('companyName');
-    localStorage.removeItem('exhibitorData');
-    localStorage.removeItem('submittedForms');
+    localStorage.clear();
     window.location.href = '/';
   };
   const handlePrintLetter = async () => {
@@ -74,6 +72,32 @@ export default function DashboardPage() {
       const storedName = localStorage.getItem('companyName');
       if (storedName) {
         setCompanyName(storedName);
+        
+        // --- LIVE SYNC WITH DATABASE ---
+        fetch('/api/submissions', { cache: 'no-store' })
+          .then(res => res.json())
+          .then(result => {
+            if (result.success && result.data) {
+              // Only look for forms belonging to THIS user
+              const userSubmissions = result.data.filter(s => 
+                (s.username === storedName || s.auth_company_name === storedName)
+              );
+              
+              const dbFormsStatus = {};
+              userSubmissions.forEach(sub => {
+                dbFormsStatus[sub.form_id] = true;
+              });
+
+              // Update the UI: only 'Complete' if found in DB for this user
+              setMandatoryForms(prev => prev.map(f => 
+                dbFormsStatus[f.id] ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' }
+              ));
+
+              // Update local memory to match DB truth
+              localStorage.setItem('submittedForms', JSON.stringify(dbFormsStatus));
+            }
+          })
+          .catch(err => console.error("Sync error:", err));
       }
 
       const exhibitorDataStr = localStorage.getItem('exhibitorData');
@@ -81,15 +105,6 @@ export default function DashboardPage() {
         const data = JSON.parse(exhibitorDataStr);
         if (data['Stall number'] || data['stallNumber']) setStallNumber(data['Stall number'] || data['stallNumber']);
         if (data['Hall number'] || data['hallNumber']) setHallNumber(data['Hall number'] || data['hallNumber']);
-      }
-
-      const submittedFormsStr = localStorage.getItem('submittedForms');
-      if (submittedFormsStr) {
-        const submittedForms = JSON.parse(submittedFormsStr);
-        
-        setMandatoryForms(prev => prev.map(f => 
-          submittedForms[f.id] ? { ...f, status: 'Complete' } : f
-        ));
       }
     }
   }, []);
