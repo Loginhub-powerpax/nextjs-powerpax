@@ -97,7 +97,6 @@ export default function FormDetailPage({ params }) {
       }
 
       const stored = localStorage.getItem('submittedForms');
-      const stored = localStorage.getItem('submittedForms');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed[formId]) {
