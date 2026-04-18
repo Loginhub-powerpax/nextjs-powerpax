@@ -22,24 +22,31 @@ export async function GET() {
         return NextResponse.json({ success: true, data: [] });
     }
 
-    // Helper to split CSV row while respecting quotes
+    // Helper to split CSV row while respecting quotes and escaped quotes ("")
     const splitCsvRow = (row) => {
         const result = [];
         let current = '';
         let inQuotes = false;
         for (let i = 0; i < row.length; i++) {
             const char = row[i];
+            
             if (char === '"') {
-                inQuotes = !inQuotes;
+                if (inQuotes && row[i+1] === '"') {
+                    current += '"';
+                    i++; 
+                } else {
+                    inQuotes = !inQuotes;
+                }
             } else if (char === ',' && !inQuotes) {
-                result.push(current.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
+                result.push(current.trim());
                 current = '';
             } else {
                 current += char;
             }
         }
-        result.push(current.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
-        return result;
+        result.push(current.trim());
+        // Final pass to remove surrounding double quotes if present
+        return result.map(val => val.replace(/^"|"$/g, ''));
     };
 
     // Define expected headers in order
