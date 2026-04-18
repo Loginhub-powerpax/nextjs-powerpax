@@ -88,8 +88,34 @@ export async function GET() {
       submissions.push(sub);
     }
 
+    // --- Master Cross-Reference ---
+    // Fetch the "Exhibitors" list to ensure we only return data for users that STILL EXIST
+    const exhibitorsUrl = 'https://docs.google.com/spreadsheets/d/1YX1nCxzZSVl-znDcfVPoWu8c8r74eXtbKwRoT7LU-eg/export?format=csv';
+    const exhibitorsResponse = await fetch(exhibitorsUrl, { cache: 'no-store' });
+    let activeUsernames = new Set();
+    
+    if (exhibitorsResponse.ok) {
+      const exhibitorsCsv = await exhibitorsResponse.text();
+      const exhibitorLines = exhibitorsCsv.split(/\r?\n/).filter(l => l.trim() !== '');
+      if (exhibitorLines.length > 0) {
+        const exhibitorHeaders = splitCsvRow(exhibitorLines[0]);
+        const userIdx = exhibitorHeaders.indexOf('username');
+        if (userIdx !== -1) {
+          for (let k = 1; k < exhibitorLines.length; k++) {
+            const row = splitCsvRow(exhibitorLines[k]);
+            if (row[userIdx]) activeUsernames.add(row[userIdx].trim());
+          }
+        }
+      }
+    }
+
+    const filteredSubmissions = submissions.filter(s => {
+      // Keep if the username is currently in the Exhibitors sheet
+      return activeUsernames.has(s.username) || activeUsernames.has(s.auth_company_name);
+    });
+
     return NextResponse.json(
-      { success: true, data: submissions },
+      { success: true, data: filteredSubmissions },
       { headers: { 'Cache-Control': 'no-store, max-age=0' } }
     );
   } catch (err) {
