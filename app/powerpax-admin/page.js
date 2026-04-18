@@ -202,20 +202,27 @@ export default function AdminPage() {
             <h2 style={{marginTop: 0, marginBottom: '5px'}}>{selectedCompanyForms[0].company_name}</h2>
             <p className="note">{selectedCompanyForms.length} Forms submitted</p>
             
-            {selectedCompanyForms.map(sub => (
-              <div key={sub.id} style={{marginTop: '20px', border: '1px solid #e2e8f0', background: '#f8fafc', padding: '20px', borderRadius: '8px'}}>
-                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <span className="badge-status-lbl" style={{background: '#dcfce7', color: '#16a34a', padding: '4px 8px', borderRadius: '4px', fontSize: '12px'}}>{sub.form_id}</span>
-                      <h3 style={{fontSize: '16px', margin: 0, color: '#334155'}}>{sub.form_title}</h3>
-                    </div>
-                   <span style={{fontSize: '12px', color: '#64748b'}}>{new Date(sub.created_at).toLocaleString()}</span>
-                 </div>
+            {selectedCompanyForms.map(sub => {
+              // Safety: Ensure all_data is a proper object, not a string
+              let displayData = sub.all_data || {};
+              if (typeof displayData === 'string') {
+                try { displayData = JSON.parse(displayData); } catch(e) { displayData = {}; }
+              }
 
-                 <hr style={{margin: '15px 0', border: '0', borderTop: '1px solid #e2e8f0'}} />
+              return (
+                <div key={sub.id} style={{marginTop: '20px', border: '1px solid #e2e8f0', background: '#f8fafc', padding: '20px', borderRadius: '8px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <span className="badge-status-lbl" style={{background: '#dcfce7', color: '#16a34a', padding: '4px 8px', borderRadius: '4px', fontSize: '12px'}}>{sub.form_id}</span>
+                        <h3 style={{fontSize: '16px', margin: 0, color: '#334155'}}>{sub.form_title}</h3>
+                      </div>
+                    <span style={{fontSize: '12px', color: '#64748b'}}>{new Date(sub.created_at).toLocaleString()}</span>
+                  </div>
 
-                 <div className="summary-list" style={{ marginTop: '0' }}>
-                  {Object.entries(sub.all_data).map(([key, value]) => {
+                  <hr style={{margin: '15px 0', border: '0', borderTop: '1px solid #e2e8f0'}} />
+
+                  <div className="summary-list" style={{ marginTop: '0' }}>
+                    {Object.entries(displayData).map(([key, value]) => {
                     if (key === 'logoPreview' && value) {
                       return (
                         <div key={key} className="summary-row">
