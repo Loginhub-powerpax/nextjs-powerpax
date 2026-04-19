@@ -133,20 +133,16 @@ export default function FormDetailPage({ params }) {
 
       // --- LIVE RECOVERY FROM DB --- 
       // If we have a username, check the live database to be sure
-      const storedUsername = localStorage.getItem('username') || storedName;
+      const storedUsername = localStorage.getItem('username');
       if (storedUsername) {
         fetch('/api/submissions', { cache: 'no-store' })
           .then(res => res.json())
           .then(result => {
              if (result.success && result.data) {
-               const mySub = result.data.find(s => 
-                 (s.username === storedUsername || 
-                  s.auth_company_name === storedUsername ||
-                  s.auth_company_name === storedName ||
-                  s.username === storedName) && 
-                 s.form_id === formId
-               );
-               if (mySub && mySub.all_data && typeof mySub.all_data === 'object') {
+               // STRICT MATCHING: Only use the unique username (Login ID)
+               const mySub = result.data.find(s => s.username === storedUsername && s.form_id === formId);
+               
+               if (mySub && mySub.all_data && typeof mySub.all_data === 'object' && Object.keys(mySub.all_data).length > 0) {
                  const data = mySub.all_data;
                  setIsComplete(true);
                  if (data.companyName) setCompanyName(data.companyName);

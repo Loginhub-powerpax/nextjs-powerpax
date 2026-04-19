@@ -74,18 +74,15 @@ export default function DashboardPage() {
         setCompanyName(storedName);
         
               // --- LIVE SYNC WITH DATABASE ---
-              const storedUsername = localStorage.getItem('username') || storedName;
+              const storedUsername = localStorage.getItem('username');
+              if (!storedUsername) return; // Cannot sync without username
+
               fetch('/api/submissions', { cache: 'no-store' })
                 .then(res => res.json())
                 .then(result => {
                   if (result.success && result.data) {
-                    // Match using username (login ID) first, or company name as fallback
-                    const userSubmissions = result.data.filter(s => 
-                      s.username === storedUsername ||
-                      s.auth_company_name === storedUsername ||
-                      s.auth_company_name === storedName ||
-                      s.username === storedName
-                    );
+                    // STRICT MATCHING: Use ONLY the unique username (Login ID)
+                    const userSubmissions = result.data.filter(s => s.username === storedUsername);
                     
                     // Read what's currently in local storage to preserve rich objects like F03 badges
                     const storedLocalStr = localStorage.getItem('submittedForms');
@@ -94,19 +91,23 @@ export default function DashboardPage() {
                     userSubmissions.forEach(sub => {
                       // Only update from DB if we don't already have rich local data for this form
                       const data = sub.all_data;
+                      const hasData = data && typeof data === 'object' && Object.keys(data).length > 0;
+                      
                       if (!dbFullData[sub.form_id]) {
-                        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                        if (hasData) {
                           dbFullData[sub.form_id] = data;
-                        } else {
-                          dbFullData[sub.form_id] = { _submitted: true };
                         }
+                        // Note: If no data, we don't mark as submitted anymore to avoid "False Complete"
                       }
                     });
 
                     // Update UI statuses based on merged data
-                    setMandatoryForms(prev => prev.map(f => 
-                      dbFullData[f.id] ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' }
-                    ));
+                    setMandatoryForms(prev => prev.map(f => {
+                       const subData = dbFullData[f.id];
+                       // ONLY mark as complete if there is ACTUAL data content
+                       const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
+                       return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
+                    }));
 
                     // Save merged data back to local memory
                     localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
