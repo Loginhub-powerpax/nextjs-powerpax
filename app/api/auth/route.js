@@ -8,8 +8,10 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Username and password are required' }, { status: 400 });
     }
 
-    // Fetch the CSV data from the Google Sheet
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/1YX1nCxzZSVl-znDcfVPoWu8c8r74eXtbKwRoT7LU-eg/export?format=csv';
+    // Fetch the CSV data from the Google Sheet (Gviz API for high-speed sync)
+    const sheetId = '1YX1nCxzZSVl-znDcfVPoWu8c8r74eXtbKwRoT7LU-eg';
+    const sheetName = 'Exhibitors';
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
     const response = await fetch(sheetUrl, { cache: 'no-store' });
     
     if (!response.ok) {
