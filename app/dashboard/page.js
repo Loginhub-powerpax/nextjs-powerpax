@@ -47,9 +47,9 @@ export default function DashboardPage() {
     // Extract data from Form 1 (F01) if available
     const f01Data = submittedForms['F01'] || {};
     
-    // Official assignment from backend/sheet
-    const officialStall = exhibitorData['Stall number'] || exhibitorData['stallNumber'];
-    const officialHall = exhibitorData['Hall number'] || exhibitorData['hallNumber'];
+    // Official assignment from backend/sheet - checking all possible variations
+    const officialStall = exhibitorData['Stall number'] || exhibitorData['stallNumber'] || exhibitorData['Stall No.'] || exhibitorData['Stall'];
+    const officialHall = exhibitorData['Hall number'] || exhibitorData['hallNumber'] || exhibitorData['Hall No.'] || exhibitorData['Hall'];
 
     // Fallback logic for Stand Number
     const finalStandNumber = officialStall 
