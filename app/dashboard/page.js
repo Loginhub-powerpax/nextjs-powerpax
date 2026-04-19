@@ -271,7 +271,7 @@ export default function DashboardPage() {
                 <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', cursor: 'pointer' }} onClick={() => setActiveTab('forms')}>
                   <h4 style={{ color: '#64748b', fontSize: '14px', marginBottom: '10px' }}>Your Assignment</h4>
                   <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af' }}>
-                    Stall: {stallNumber} {hallNumber ? `| Hall: ${hallNumber}` : ''}
+                    Stall: {stallNumber || 'TBD'} {hallNumber ? `| Hall: ${hallNumber}` : '| Hall: Not Assigned'}
                   </div>
                 </div>
               </div>
