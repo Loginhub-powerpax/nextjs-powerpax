@@ -186,6 +186,7 @@ export default function DashboardPage() {
            }
         })
         .catch(err => console.error("Assignment refresh error:", err));
+      }
     }
   }, []);
 
