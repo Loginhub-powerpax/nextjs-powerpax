@@ -30,6 +30,14 @@ export default function DashboardPage() {
   const handlePrintLetter = async () => {
     if (typeof window === 'undefined') return;
 
+    // --- FINAL LOCK CHECK ---
+    const f01 = mandatoryForms.find(f => f.id === 'F01');
+    if (!f01 || f01.status !== 'Complete') {
+      alert("Please complete Form 1: Show Directory first to unlock your Participation Letter.");
+      setActiveTab('dashboard');
+      return;
+    }
+
     const submittedFormsStr = localStorage.getItem('submittedForms');
     const submittedForms = submittedFormsStr ? JSON.parse(submittedFormsStr) : {};
 
@@ -236,9 +244,8 @@ export default function DashboardPage() {
               <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '25px' }}>Participation Letter</h1>
               
               {(() => {
-                const submittedStr = typeof window !== 'undefined' ? localStorage.getItem('submittedForms') : null;
-                const submitted = submittedStr ? JSON.parse(submittedStr) : {};
-                const isF01Complete = !!submitted['F01'];
+                const f01 = mandatoryForms.find(f => f.id === 'F01');
+                const isF01Complete = f01 && f01.status === 'Complete';
                 
                 if (!isF01Complete) {
                   return (
