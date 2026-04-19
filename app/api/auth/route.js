@@ -32,15 +32,33 @@ export async function GET(request) {
       };
 
       const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== '');
-      const headers = splitCsvLine(lines[0]);
-      const users = [];
+      if (lines.length === 0) return NextResponse.json({ error: 'Sheet empty' }, { status: 400 });
 
-      for (let i = 1; i < lines.length; i++) {
+      // Robust fallback headers based on identified sheet structure
+      const DEFAULT_HEADERS = ['username', 'password', 'company_name', 'status', 'stallNumber', 'hallNumber'];
+      let headers = splitCsvLine(lines[0]);
+      let dataStartIdx = 1;
+
+      // Detect if row 1 is actually data merged with headers (Gviz glitch) or just data
+      if (headers[0] && (headers[0].includes(' ') || headers[0].toLowerCase() === 'eastman')) {
+          headers = DEFAULT_HEADERS;
+          dataStartIdx = 0; // Treat first row as data
+      }
+
+      const users = [];
+      for (let i = dataStartIdx; i < lines.length; i++) {
         const row = splitCsvLine(lines[i]);
         if (row.length < 2) continue;
         const user = {};
+        // Map to headers, but also handle the 'username Eastman' style glitch by splitting if needed
         headers.forEach((header, index) => {
-          if (header) user[header] = row[index] || '';
+          let val = row[index] || '';
+          // If this is the glitched first row, try to extract the second part
+          if (dataStartIdx === 0 && i === 0 && val.includes(' ')) {
+              const parts = val.split(' ');
+              val = parts[parts.length - 1]; // Take the actual value 'Eastman'
+          }
+          user[header] = val;
         });
         users.push(user);
       }
@@ -107,15 +125,31 @@ export async function POST(request) {
     const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== '');
     if (lines.length === 0) throw new Error("Sheet is empty");
     
-    const headers = splitCsvLine(lines[0]);
-    const users = [];
+    // Robust fallback headers based on identified sheet structure
+    const DEFAULT_HEADERS = ['username', 'password', 'company_name', 'status', 'stallNumber', 'hallNumber'];
+    let headers = splitCsvLine(lines[0]);
+    let dataStartIdx = 1;
 
-    for (let i = 1; i < lines.length; i++) {
+    // Detect if row 1 is actually data merged with headers (Gviz glitch) or just data
+    if (headers[0] && (headers[0].includes(' ') || headers[0].toLowerCase() === 'eastman')) {
+        headers = DEFAULT_HEADERS;
+        dataStartIdx = 0; // Treat first row as data
+    }
+
+    const users = [];
+    for (let i = dataStartIdx; i < lines.length; i++) {
       const row = splitCsvLine(lines[i]);
       if (row.length < 2) continue;
       const user = {};
+      // Map to headers, but also handle the 'username Eastman' style glitch by splitting if needed
       headers.forEach((header, index) => {
-        if (header) user[header] = row[index] || '';
+        let val = row[index] || '';
+        // If this is the glitched first row, try to extract the second part
+        if (dataStartIdx === 0 && i === 0 && val.includes(' ')) {
+            const parts = val.split(' ');
+            val = parts[parts.length - 1]; // Take the actual value 'Eastman'
+        }
+        user[header] = val;
       });
       users.push(user);
     }
