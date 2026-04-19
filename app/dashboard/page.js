@@ -82,22 +82,24 @@ export default function DashboardPage() {
         setCompanyName(storedName);
         
               // --- LIVE SYNC WITH DATABASE ---
-              const storedUsername = localStorage.getItem('username');
-              if (!storedUsername) return; // Cannot sync without username
+              const rawUsername = localStorage.getItem('username');
+              if (!rawUsername) return;
+              const storedUsername = rawUsername.trim().toLowerCase();
 
               fetch('/api/submissions', { cache: 'no-store' })
                 .then(res => res.json())
                 .then(result => {
                   if (result.success && result.data) {
-                    // STRICT MATCHING: Use ONLY the unique username (Login ID)
-                    const userSubmissions = result.data.filter(s => s.username === storedUsername);
+                    // RESILIENT MATCHING: Trim and lowercase everything to avoid case-sensitivity/space issues
+                    const userSubmissions = result.data.filter(s => 
+                      (s.username || '').trim().toLowerCase() === storedUsername ||
+                      (s.auth_company_name || '').trim().toLowerCase() === storedUsername
+                    );
                     
-                    // Read what's currently in local storage to preserve rich objects like F03 badges
                     const storedLocalStr = localStorage.getItem('submittedForms');
                     const dbFullData = storedLocalStr ? JSON.parse(storedLocalStr) : {};
                     
                     userSubmissions.forEach(sub => {
-                      // Only update from DB if we don't already have rich local data for this form
                       const data = sub.all_data;
                       const hasData = data && typeof data === 'object' && Object.keys(data).length > 0;
                       
@@ -105,19 +107,16 @@ export default function DashboardPage() {
                         if (hasData) {
                           dbFullData[sub.form_id] = data;
                         }
-                        // Note: If no data, we don't mark as submitted anymore to avoid "False Complete"
                       }
                     });
 
                     // Update UI statuses based on merged data
                     setMandatoryForms(prev => prev.map(f => {
                        const subData = dbFullData[f.id];
-                       // ONLY mark as complete if there is ACTUAL data content
                        const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
                        return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
                     }));
 
-                    // Save merged data back to local memory
                     localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
                   }
                 })
@@ -127,8 +126,12 @@ export default function DashboardPage() {
       const exhibitorDataStr = localStorage.getItem('exhibitorData');
       if (exhibitorDataStr) {
         const data = JSON.parse(exhibitorDataStr);
-        if (data['Stall number'] || data['stallNumber']) setStallNumber(data['Stall number'] || data['stallNumber']);
-        if (data['Hall number'] || data['hallNumber']) setHallNumber(data['Hall number'] || data['hallNumber']);
+        // Resilient assignment scanner - check every possible variation
+        const foundStall = data['Stall number'] || data['stallNumber'] || data['Stall No.'] || data['Stall'] || data['stall'];
+        const foundHall = data['Hall number'] || data['hallNumber'] || data['Hall No.'] || data['Hall'] || data['hall'];
+        
+        if (foundStall) setStallNumber(foundStall);
+        if (foundHall) setHallNumber(foundHall);
       }
     }
   }, []);

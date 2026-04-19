@@ -18,27 +18,53 @@ export async function POST(request) {
     
     const csvData = await response.text();
     
-    // Parse CSV (basic parsing handling quotes and commas)
-    const lines = csvData.split('\n').filter(line => line.trim() !== '');
-    const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+    // Robust CSV parsing function helper
+    const splitCsvLine = (line) => {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          if (inQuotes && line[i+1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result.map(v => v.replace(/^"|"$/g, '').trim());
+    };
+
+    const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== '');
+    if (lines.length === 0) throw new Error("Sheet is empty");
     
+    const headers = splitCsvLine(lines[0]);
     const users = [];
+
     for (let i = 1; i < lines.length; i++) {
-      // Very basic CSV splitting (assumes no commas inside quotes for simplicity)
-      // A more robust parser would be needed for complex data, but enough for this sheet.
-      const row = lines[i].split(',').map(val => val.trim().replace(/^"|"$/g, ''));
+      const row = splitCsvLine(lines[i]);
+      if (row.length < 2) continue;
       const user = {};
       headers.forEach((header, index) => {
-        user[header] = row[index];
+        if (header) user[header] = row[index] || '';
       });
       users.push(user);
     }
 
-    // Find the user
+    // Find the user with case-insensitive and trimmed matching
+    const inputUser = username.trim().toLowerCase();
     const matchedUser = users.find(u => 
-      u.username === username && 
-      u.password === password && 
-      u.status?.toLowerCase() === 'active'
+      (u.username || '').trim().toLowerCase() === inputUser && 
+      (u.password || '').trim() === password.trim() && 
+      (u.status || '').trim().toLowerCase() === 'active'
     );
 
     if (matchedUser) {
