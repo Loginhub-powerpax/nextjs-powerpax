@@ -77,53 +77,54 @@ export default function DashboardPage() {
   useEffect(() => {
     // Load from local storage
     if (typeof window !== 'undefined') {
+      const rawUsername = localStorage.getItem('username');
+      const storedUsername = rawUsername ? rawUsername.trim().toLowerCase() : null;
+      
       const storedName = localStorage.getItem('companyName');
       if (storedName) {
         setCompanyName(storedName);
         
               // --- LIVE SYNC WITH DATABASE ---
-              const rawUsername = localStorage.getItem('username');
-              if (!rawUsername) return;
-              const storedUsername = rawUsername.trim().toLowerCase();
-
-              fetch('/api/submissions', { cache: 'no-store' })
-                .then(res => res.json())
-                .then(result => {
-                  if (result.success && result.data) {
-                    // RESILIENT MATCHING: Trim and lowercase everything to avoid case-sensitivity/space issues
-                    const userSubmissions = result.data.filter(s => 
-                      (s.username || '').trim().toLowerCase() === storedUsername ||
-                      (s.auth_company_name || '').trim().toLowerCase() === storedUsername
-                    );
-                    
-                    const storedLocalStr = localStorage.getItem('submittedForms');
-                    const dbFullData = storedLocalStr ? JSON.parse(storedLocalStr) : {};
-                    
-                    userSubmissions.forEach(sub => {
-                      const data = sub.all_data;
-                      const hasData = data && typeof data === 'object' && Object.keys(data).length > 0;
+              if (storedUsername) {
+                fetch('/api/submissions', { cache: 'no-store' })
+                  .then(res => res.json())
+                  .then(result => {
+                    if (result.success && result.data) {
+                      // RESILIENT MATCHING: Trim and lowercase everything to avoid case-sensitivity/space issues
+                      const userSubmissions = result.data.filter(s => 
+                        (s.username || '').trim().toLowerCase() === storedUsername ||
+                        (s.auth_company_name || '').trim().toLowerCase() === storedUsername
+                      );
                       
-                      if (!dbFullData[sub.form_id]) {
-                        if (hasData) {
-                          dbFullData[sub.form_id] = data;
+                      const storedLocalStr = localStorage.getItem('submittedForms');
+                      const dbFullData = storedLocalStr ? JSON.parse(storedLocalStr) : {};
+                      
+                      userSubmissions.forEach(sub => {
+                        const data = sub.all_data;
+                        const hasData = data && typeof data === 'object' && Object.keys(data).length > 0;
+                        
+                        if (!dbFullData[sub.form_id]) {
+                          if (hasData) {
+                            dbFullData[sub.form_id] = data;
+                          }
                         }
-                      }
-                    });
+                      });
 
-                    // Update UI statuses based on merged data
-                    const updateUI = (data) => {
-                      setMandatoryForms(prev => prev.map(f => {
-                        const subData = data[f.id];
-                        const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
-                        return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
-                      }));
-                    };
+                      // Update UI statuses based on merged data
+                      const updateUI = (data) => {
+                        setMandatoryForms(prev => prev.map(f => {
+                          const subData = data[f.id];
+                          const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
+                          return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
+                        }));
+                      };
 
-                    updateUI(dbFullData);
-                    localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
-                  }
-                })
-          .catch(err => console.error("Sync error:", err));
+                      updateUI(dbFullData);
+                      localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
+                    }
+                  })
+            .catch(err => console.error("Sync error:", err));
+          }
           
           // --- IMMEDIATE LOCAL UI UPDATE ---
           // Don't wait for API if we have local data (for instant feedback)
@@ -161,7 +162,8 @@ export default function DashboardPage() {
 
       // --- LIVE ASSIGNMENT REFRESH ---
       // Fetch latest assignments directly to bypass any localStorage delays
-      fetch(`/api/auth?mode=refresh&username=${storedUsername}`, { cache: 'no-store' })
+      if (storedUsername) {
+        fetch(`/api/auth?mode=refresh&username=${storedUsername}`, { cache: 'no-store' })
         .then(res => res.json())
         .then(result => {
            if (result.success && result.user) {
