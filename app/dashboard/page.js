@@ -158,6 +158,32 @@ export default function DashboardPage() {
         if (foundStall) setStallNumber(foundStall);
         if (foundHall) setHallNumber(foundHall);
       }
+
+      // --- LIVE ASSIGNMENT REFRESH ---
+      // Fetch latest assignments directly to bypass any localStorage delays
+      fetch(`/api/auth?mode=refresh&username=${storedUsername}`, { cache: 'no-store' })
+        .then(res => res.json())
+        .then(result => {
+           if (result.success && result.user) {
+              const data = result.user;
+              let bestStall = '';
+              let bestHall = '';
+              Object.keys(data).forEach(key => {
+                const lowerKey = key.toLowerCase();
+                if (lowerKey.includes('stall') || lowerKey.includes('stand')) {
+                   if (!bestStall) bestStall = data[key];
+                }
+                if (lowerKey.includes('hall')) {
+                   if (!bestHall) bestHall = data[key];
+                }
+              });
+              if (bestStall) setStallNumber(bestStall);
+              if (bestHall) setHallNumber(bestHall);
+              // Update local cache too
+              localStorage.setItem('exhibitorData', JSON.stringify(data));
+           }
+        })
+        .catch(err => console.error("Assignment refresh error:", err));
     }
   }, []);
 
