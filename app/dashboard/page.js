@@ -111,25 +111,50 @@ export default function DashboardPage() {
                     });
 
                     // Update UI statuses based on merged data
-                    setMandatoryForms(prev => prev.map(f => {
-                       const subData = dbFullData[f.id];
-                       const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
-                       return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
-                    }));
+                    const updateUI = (data) => {
+                      setMandatoryForms(prev => prev.map(f => {
+                        const subData = data[f.id];
+                        const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
+                        return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
+                      }));
+                    };
 
+                    updateUI(dbFullData);
                     localStorage.setItem('submittedForms', JSON.stringify(dbFullData));
                   }
                 })
           .catch(err => console.error("Sync error:", err));
+          
+          // --- IMMEDIATE LOCAL UI UPDATE ---
+          // Don't wait for API if we have local data (for instant feedback)
+          const localStr = localStorage.getItem('submittedForms');
+          if (localStr) {
+             const localData = JSON.parse(localStr);
+             setMandatoryForms(prev => prev.map(f => {
+               const subData = localData[f.id];
+               const isActuallyComplete = subData && typeof subData === 'object' && Object.keys(subData).length > 0;
+               return isActuallyComplete ? { ...f, status: 'Complete' } : { ...f, status: 'Pending' };
+             }));
+          }
       }
 
       const exhibitorDataStr = localStorage.getItem('exhibitorData');
       if (exhibitorDataStr) {
         const data = JSON.parse(exhibitorDataStr);
-        // Resilient assignment scanner - check every possible variation
-        const foundStall = data['Stall number'] || data['stallNumber'] || data['Stall No.'] || data['Stall'] || data['stall'];
-        const foundHall = data['Hall number'] || data['hallNumber'] || data['Hall No.'] || data['Hall'] || data['hall'];
+        // FUZZY SCANNER: Look through ALL keys for anything that looks like Hall or Stall
+        let foundStall = '';
+        let foundHall = '';
         
+        Object.keys(data).forEach(key => {
+          const lowerKey = key.toLowerCase();
+          if (lowerKey.includes('stall') || lowerKey.includes('stand')) {
+             if (!foundStall) foundStall = data[key];
+          }
+          if (lowerKey.includes('hall')) {
+             if (!foundHall) foundHall = data[key];
+          }
+        });
+
         if (foundStall) setStallNumber(foundStall);
         if (foundHall) setHallNumber(foundHall);
       }
