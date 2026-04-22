@@ -371,6 +371,9 @@ export default function FormDetailPage({ params }) {
           <div className="form-row"><label>Mobile Number</label><input type="tel" className="gray-input" value={newBadge.mobile} onChange={e => setNewBadge({...newBadge, mobile: e.target.value})} required /></div>
           <div className="form-row"><label>Company Name</label><input type="text" className="gray-input" value={newBadge.companyName} onChange={e => setNewBadge({...newBadge, companyName: e.target.value})} required /></div>
         </div>
+        <div className="form-row-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+          <div className="form-row"><label>Designation <span style={{ color: '#ef4444' }}>*</span></label><input type="text" className="gray-input" placeholder="e.g. Manager, Director" value={newBadge.designation} onChange={e => setNewBadge({...newBadge, designation: e.target.value})} required /></div>
+        </div>
         <div className="terms-section mt-20">
           <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '12px', cursor: 'pointer' }}><input type="checkbox" checked={newBadge.terms} onChange={e => setNewBadge({...newBadge, terms: e.target.checked})} style={{ marginTop: '3px' }}/><span>I accept the Terms and Conditions</span></label>
         </div>
