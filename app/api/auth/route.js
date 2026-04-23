@@ -58,7 +58,8 @@ export async function GET(request) {
               const parts = val.split(' ');
               val = parts[parts.length - 1]; // Take the actual value 'Eastman'
           }
-          user[header] = val;
+          // Always store stall/hall as string to preserve alphanumeric values like "A12"
+          user[header] = String(val);
         });
         users.push(user);
       }
@@ -149,7 +150,8 @@ export async function POST(request) {
             const parts = val.split(' ');
             val = parts[parts.length - 1]; // Take the actual value 'Eastman'
         }
-        user[header] = val;
+        // Always store stall/hall as string to preserve alphanumeric values like "A12"
+        user[header] = String(val);
       });
       users.push(user);
     }
