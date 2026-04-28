@@ -195,17 +195,28 @@ export default function FormDetailPage({ params }) {
     alert(`Successfully saved and submitted form ${formId}!`);
   };
 
+  const [editIndex, setEditIndex] = useState(null);
+
   const handleSaveBadge = (e) => {
     e.preventDefault();
-    if (badges.length >= 6) { 
+    if (badges.length >= 6 && editIndex === null) { 
       alert("Only 6 badges allowed per login. Please make a request for more badges through mail at abhishek.tresubmedia@gmail.com"); 
       return; 
     }
     if (!newBadge.terms) { alert("Please accept the terms and conditions"); return; }
-    const badgeToPush = { ...newBadge, urn: `URN${Math.floor(Math.random() * 10000)}`, status: 'Pending' };
-    const updatedBadges = [...badges, badgeToPush];
+    
+    let updatedBadges;
+    if (editIndex !== null) {
+      updatedBadges = [...badges];
+      updatedBadges[editIndex] = { ...newBadge };
+    } else {
+      const badgeToPush = { ...newBadge, urn: `URN${Math.floor(Math.random() * 10000)}`, status: 'Pending' };
+      updatedBadges = [...badges, badgeToPush];
+    }
+    
     setBadges(updatedBadges);
     setIsAddingBadge(false);
+    setEditIndex(null);
     
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('submittedForms');
@@ -214,6 +225,8 @@ export default function FormDetailPage({ params }) {
       F03Data.badges = updatedBadges;
       F03Data.formId = formId; 
       F03Data.companyName = authCompanyName;
+      F03Data.authCompanyName = authCompanyName;
+      F03Data.username = authUsername || localStorage.getItem('username') || authCompanyName;
       F03Data.timestamp = Date.now();
       parsed[formId] = F03Data;
       localStorage.setItem('submittedForms', JSON.stringify(parsed));
@@ -221,6 +234,35 @@ export default function FormDetailPage({ params }) {
       try { fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(F03Data) }); } catch(err) {}
     }
     setNewBadge({ type: 'Exhibitor', title: 'Mr.', firstName: '', lastName: '', mobile: '', altMobile: '', email: '', altEmail: '', companyName: authCompanyName, designation: '', dob: '', idProofType: 'Aadhar Card', idProofNumber: '', emergencyContact: '', emergencyNumber: '', emergencyRelation: '', terms: false });
+  };
+
+  const handleEditBadge = (idx) => {
+    setNewBadge(badges[idx]);
+    setEditIndex(idx);
+    setIsAddingBadge(true);
+  };
+
+  const handleDeleteBadge = (idx) => {
+    if (confirm("Are you sure you want to delete this badge?")) {
+      const updatedBadges = badges.filter((_, i) => i !== idx);
+      setBadges(updatedBadges);
+      
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('submittedForms');
+        const parsed = stored ? JSON.parse(stored) : {};
+        const F03Data = parsed[formId] || {};
+        F03Data.badges = updatedBadges;
+        F03Data.formId = formId; 
+        F03Data.companyName = authCompanyName;
+        F03Data.authCompanyName = authCompanyName;
+        F03Data.username = authUsername || localStorage.getItem('username') || authCompanyName;
+        F03Data.timestamp = Date.now();
+        parsed[formId] = F03Data;
+        localStorage.setItem('submittedForms', JSON.stringify(parsed));
+        setIsComplete(updatedBadges.length > 0);
+        try { fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(F03Data) }); } catch(err) {}
+      }
+    }
   };
 
   const handleLogoUpload = (e) => {
@@ -349,7 +391,12 @@ export default function FormDetailPage({ params }) {
           <thead><tr><th>#</th><th>Type</th><th>URN</th><th>Name</th><th>Company Name</th><th>Email</th><th>Mobile</th><th>Status</th><th>Action</th></tr></thead>
           <tbody>
             {badges.length === 0 ? <tr><td colSpan="9" style={{textAlign: "center", padding: "20px"}}>No badges added yet.</td></tr> : badges.map((badge, idx) => (
-              <tr key={idx}><td>{idx + 1}</td><td>{badge.type}</td><td>{badge.urn}</td><td>{badge.firstName} {badge.lastName}</td><td>{badge.companyName}</td><td>{badge.email}</td><td>{badge.mobile}</td><td><span className="badge-status-pill">{badge.status}</span></td><td><i className="fas fa-bars" style={{color: '#22c55e', cursor: 'pointer'}}></i></td></tr>
+              <tr key={idx}><td>{idx + 1}</td><td>{badge.type}</td><td>{badge.urn}</td><td>{badge.firstName} {badge.lastName}</td><td>{badge.companyName}</td><td>{badge.email}</td><td>{badge.mobile}</td><td><span className="badge-status-pill">{badge.status}</span></td>
+                <td>
+                  <i className="fas fa-edit" onClick={() => handleEditBadge(idx)} style={{color: '#0ea5e9', cursor: 'pointer', marginRight: '10px'}} title="Edit"></i>
+                  <i className="fas fa-trash" onClick={() => handleDeleteBadge(idx)} style={{color: '#ef4444', cursor: 'pointer'}} title="Delete"></i>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -550,7 +597,7 @@ export default function FormDetailPage({ params }) {
             <h1>{formId} - {formTitle}</h1>
             <div className="header-badges">
               {isComplete ? <span className="badge status-complete">Complete</span> : <span className="badge status-pending">Pending</span>}
-              <span className="badge badge-deadline">Deadline: 28 Apr 2026</span>
+              <span className="badge badge-deadline">Deadline: 29 Apr 2026</span>
             </div>
           </div>
         </div>

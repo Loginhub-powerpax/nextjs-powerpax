@@ -88,36 +88,7 @@ export async function GET() {
       submissions.push(sub);
     }
 
-    // --- Master Cross-Reference (Resilient Case-Insensitive) ---
-    // Fetch the "Exhibitors" list to ensure we only return data for users that STILL EXIST
-    const exhibitorsUrl = 'https://docs.google.com/spreadsheets/d/1YX1nCxzZSVl-znDcfVPoWu8c8r74eXtbKwRoT7LU-eg/export?format=csv';
-    const exhibitorsResponse = await fetch(exhibitorsUrl, { cache: 'no-store' });
-    let activeUsernames = new Set();
-    
-    if (exhibitorsResponse.ok) {
-      const exhibitorsCsv = await exhibitorsResponse.text();
-      const exhibitorLines = exhibitorsCsv.split(/\r?\n/).filter(l => l.trim() !== '');
-      if (exhibitorLines.length > 0) {
-        const exhibitorHeaders = splitCsvRow(exhibitorLines[0]);
-        // Find column index for 'username' or any similar field
-        const userIdx = exhibitorHeaders.findIndex(h => h.toLowerCase().includes('username') || h.toLowerCase().includes('id'));
-        if (userIdx !== -1) {
-          for (let k = 1; k < exhibitorLines.length; k++) {
-            const row = splitCsvRow(exhibitorLines[k]);
-            if (row[userIdx]) {
-              activeUsernames.add(row[userIdx].trim().toLowerCase());
-            }
-          }
-        }
-      }
-    }
-
-    const filteredSubmissions = submissions.filter(s => {
-      const sUser = (s.username || '').trim().toLowerCase();
-      const sAuthCo = (s.auth_company_name || '').trim().toLowerCase();
-      // Keep if the normalized username is currently in the normalized Exhibitors list
-      return activeUsernames.has(sUser) || activeUsernames.has(sAuthCo);
-    });
+    const filteredSubmissions = submissions;
 
     return NextResponse.json(
       { success: true, data: filteredSubmissions },
