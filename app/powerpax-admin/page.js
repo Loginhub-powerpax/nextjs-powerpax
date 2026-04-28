@@ -164,7 +164,11 @@ export default function AdminPage() {
                 ) : Object.keys(groupedSubmissions).length === 0 ? (
                   <tr><td colSpan="5" style={{padding: '40px', textAlign: 'center'}}>No submissions found.</td></tr>
                 ) : (
-                  Object.keys(groupedSubmissions).map(key => {
+                  Object.keys(groupedSubmissions).sort((a, b) => {
+                    const compA = (groupedSubmissions[a][0].auth_company_name || groupedSubmissions[a][0].company_name || a).toLowerCase();
+                    const compB = (groupedSubmissions[b][0].auth_company_name || groupedSubmissions[b][0].company_name || b).toLowerCase();
+                    return compA.localeCompare(compB);
+                  }).map(key => {
                     const forms = groupedSubmissions[key];
                     const recentSub = forms[0];
                     const filledFormIds = forms.map(f => f.form_id);
